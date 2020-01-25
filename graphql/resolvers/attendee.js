@@ -39,6 +39,20 @@ module.exports = {
       console.log(err);
       throw err;
     }
+  },
+
+  //drinkCounterUpdateInput
+  updateDrinkCounter: async (args, req) => {
+    try {
+      const attendee = await Attendee.findOneAndUpdate(
+        { userId: args.drinkCounterUpdateInput.userId },
+        { drinkCounter: args.drinkCounterUpdateInput.drinkCounter },
+        { new: true }
+      );
+      return attendee;
+    } catch (err) {
+      throw err;
+    }
   }
 };
 

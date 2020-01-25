@@ -39,6 +39,11 @@ type Attendee {
   date: String!
 }
 
+input DrinkCounterUpdateInput {
+  userId: String!
+  drinkCounter: Int!
+}
+
 input AttendeeInput {
   userId: String!
   name: String!
@@ -71,6 +76,7 @@ type RootMutation {
     bookEvent(eventId: ID!): Booking!
     cancelBooking(bookingId: ID!): Event!
     checkInAttendee(attendeeInput: AttendeeInput): Attendee
+    updateDrinkCounter(drinkCounterUpdateInput: DrinkCounterUpdateInput): Attendee
 }
 
 schema {
