@@ -8,6 +8,7 @@ module.exports = {
       const attendees = await Attendee.find();
       // Not sure whether I need to transform
       return attendees.map(attendee => {
+        console.log(attendee);
         return transformAttendee(attendee);
       });
       // return attendees;
@@ -32,6 +33,7 @@ module.exports = {
 
     let createdAttendee;
     try {
+      console.log("newAttendee", attendee);
       const result = await attendee.save();
       createdAttendee = transformAttendee(result);
       return createdAttendee;

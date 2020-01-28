@@ -37,11 +37,33 @@ type Attendee {
   name: String!
   drinkCounter: Int!
   date: String!
+  drinks: [Drink!]!
+}
+
+type DrinkType {
+  _id: ID!
+  name: String!
+}
+
+type Drink {
+  _id: ID!
+  name: String!
+  drinkTypeId: ID!
+}
+
+input AddDrinkTypeInput {
+  name: String!
+}
+
+input AddDrinkInput {
+  name: String!
+  drinkTypeId: ID!
 }
 
 input DrinkCounterUpdateInput {
   userId: String!
   drinkCounter: Int!
+  drinkId: ID!
 }
 
 input AttendeeInput {
@@ -68,6 +90,8 @@ type RootQuery {
     bookings: [Booking!]!
     login(email: String!, password: String!): AuthData!
     attendees: [Attendee!]!
+    drinkTypes: [DrinkType!]!
+    drinks: [Drink!]!
 }
 
 type RootMutation {
@@ -77,6 +101,8 @@ type RootMutation {
     cancelBooking(bookingId: ID!): Event!
     checkInAttendee(attendeeInput: AttendeeInput): Attendee
     updateDrinkCounter(drinkCounterUpdateInput: DrinkCounterUpdateInput): Attendee
+    addDrinkType(addDrinkTypeInput: AddDrinkTypeInput): DrinkType
+    addDrink(addDrinkInput: AddDrinkInput): Drink
 }
 
 schema {

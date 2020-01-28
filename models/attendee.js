@@ -14,6 +14,10 @@ const attendeeSchema = new Schema({
   drinkCounter: {
     type: Number,
     required: true
+  },
+  date: {
+    type: Date,
+    required: true
   }
 });
 
