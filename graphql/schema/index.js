@@ -58,16 +58,19 @@ type DrinkType {
   createdDrinks: [Drink!]!
 }
 
-type Count {
-  createdAt: String!
-  user: Attendee
-}
-
 type Drink {
   _id: ID!
   name: String!
   drinkType: DrinkType!
-  count: [Count!]!
+  count: [String!]!
+}
+
+type CurrentDrink {
+  _id: ID!
+  drinkId: String!
+  name: String!
+  drinkType: DrinkType!
+  count: [String!]!
 }
 
 input AddDrinkTypeInput {
@@ -131,6 +134,7 @@ type RootQuery {
     currentAttendees: [CurrentAttendee!]!
     drinkTypes: [DrinkType!]!
     drinks: [Drink!]!
+    currentDrinks: [CurrentDrink!]!
 }
 
 type RootMutation {

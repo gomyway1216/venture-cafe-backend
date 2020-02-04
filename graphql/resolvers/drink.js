@@ -8,6 +8,7 @@ module.exports = {
   drinks: async () => {
     try {
       const drinks = await Drink.find()
+
       return drinks.map(drink => {
         // console.log(drink)
         return transformDrink(drink)

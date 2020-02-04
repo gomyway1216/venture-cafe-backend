@@ -1,6 +1,7 @@
 const Attendee = require('../../models/attendee')
 const CurrentAttendee = require('../../models/currentAttendee')
 const Drink = require('../../models/drink')
+const CurrentDrink = require('../../models/currentDrink')
 
 const { transformAttendee } = require('./merge')
 
@@ -23,6 +24,8 @@ module.exports = {
   currentAttendees: async () => {
     try {
       const attendees = await CurrentAttendee.find()
+        .populate('drinks')
+        .exec()
 
       for (let i = 0; i < attendees.length; i++) {
         console.log('attendees', attendees[i].drinks)
@@ -65,38 +68,38 @@ module.exports = {
   },
 
   //drinkCounterUpdateInput
-  updateDrinkCounter: async (args, req) => {
-    try {
-      // const attendee = await Attendee.findOneAndUpdate(
-      //   { userId: args.drinkCounterUpdateInput.userId },
-      //   { drinkCounter: args.drinkCounterUpdateInput.drinkCounter },
-      //   { new: true }
-      // )
-      const attendee = await Attendee.findOne({
-        userId: args.drinkCounterUpdateInput.userId,
-      })
-      // console.log('attendee', attendee)
-      // console.log(args.drinkCounterUpdateInput.drinkCounter)
-      attendee.drinkCounter = args.drinkCounterUpdateInput.drinkCounter
-      const drink = await Drink.findOne({
-        _id: args.drinkCounterUpdateInput.drinkId,
-      })
-      // push the drink to the attendee's drink list
-      attendee.drinks.push(drink)
+  // updateDrinkCounter: async (args, req) => {
+  //   try {
+  //     // const attendee = await Attendee.findOneAndUpdate(
+  //     //   { userId: args.drinkCounterUpdateInput.userId },
+  //     //   { drinkCounter: args.drinkCounterUpdateInput.drinkCounter },
+  //     //   { new: true }
+  //     // )
+  //     const attendee = await Attendee.findOne({
+  //       userId: args.drinkCounterUpdateInput.userId,
+  //     })
+  //     // console.log('attendee', attendee)
+  //     // console.log(args.drinkCounterUpdateInput.drinkCounter)
+  //     attendee.drinkCounter = args.drinkCounterUpdateInput.drinkCounter
+  //     const drink = await Drink.findOne({
+  //       _id: args.drinkCounterUpdateInput.drinkId,
+  //     })
+  //     // push the drink to the attendee's drink list
+  //     attendee.drinks.push(drink)
 
-      // update the drink
-      const drinkCount = {
-        createdAt: new Date(args.drinkCounterUpdateInput.date),
-        user: attendee.id,
-      }
-      drink.count.push(drinkCount)
+  //     // update the drink
+  //     // const drinkCount = {
+  //     //   createdAt: new Date(args.drinkCounterUpdateInput.date),
+  //     //   user: attendee.id,
+  //     // }
+  //     drink.count.push(new Date(args.drinkCounterUpdateInput.date))
 
-      return attendee
-    } catch (err) {
-      console.log(err)
-      throw err
-    }
-  },
+  //     return attendee
+  //   } catch (err) {
+  //     console.log(err)
+  //     throw err
+  //   }
+  // },
 
   updateAttendeeDrinks: async (args, req) => {
     try {
@@ -120,20 +123,24 @@ module.exports = {
       // It is attending the current attendee instead of currentAttendee
       // CurrentAttendee is just the temporary and the value would be merged
       // into Attendee once the client side confirms it.
-      drink.count.push({
-        createdAt: new Date(args.updateAttendeeDrinksInput.date),
-        user: attendee,
+      // this should happen when the front-end code choose to push all the data
+      // drink.count.push(new Date(args.updateAttendeeDrinksInput.date))
+
+      const currentDrink = await CurrentDrink.findOne({
+        drinkId: args.updateAttendeeDrinksInput.drinkId,
       })
 
       console.log('this is drink', drink)
       currentAttendee.drinks.push(drink)
+      currentDrink.count.push(new Date(args.updateAttendeeDrinksInput.date))
 
       // CurrentAttendee.updateOne(
       //   { attendeeId: args.updateAttendeeDrinksInput._id },
       //   { $set: { drinks: currentAttendee.drinks } }
       // )
       const result = await currentAttendee.save()
-      await drink.save()
+      await currentDrink.save()
+      // await drink.save()
 
       console.log('currentAttendee.drinks', currentAttendee.drinks)
 
@@ -240,5 +247,9 @@ module.exports = {
       console.log(err)
       throw err
     }
+  },
+
+  resetAttendeeDrinks: async (args, req) => {
+    await CurrentAttendee.updateMany({}, { $set: { drinks: [] } })
   },
 }

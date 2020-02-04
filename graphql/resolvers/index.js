@@ -4,6 +4,7 @@ const bookingResolver = require('./booking')
 const attendeeResolver = require('./attendee')
 const drinkTypeResolver = require('./drinkType')
 const drinkResolver = require('./drink')
+const currentDrinkResolver = require('./currentDrink')
 
 const rootResolver = {
   ...authResolver,
@@ -12,6 +13,7 @@ const rootResolver = {
   ...attendeeResolver,
   ...drinkTypeResolver,
   ...drinkResolver,
+  ...currentDrinkResolver,
 }
 
 module.exports = rootResolver

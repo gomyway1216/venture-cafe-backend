@@ -2,8 +2,12 @@ const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
 
-const drinkSchema = new Schema({
+const currentDrinkSchema = new Schema({
   name: {
+    type: String,
+    required: true,
+  },
+  drinkId: {
     type: String,
     required: true,
   },
@@ -17,4 +21,4 @@ const drinkSchema = new Schema({
   },
 })
 
-module.exports = mongoose.model('Drink', drinkSchema)
+module.exports = mongoose.model('CurrentDrink', currentDrinkSchema)
