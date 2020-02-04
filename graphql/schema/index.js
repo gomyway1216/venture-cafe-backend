@@ -117,6 +117,12 @@ input UserInput {
   password: String!
 }
 
+input UpdateAttendeeDrinksInput {
+  _id: String!
+  drinkId: String!
+  date: String!
+}
+
 type RootQuery {
     events: [Event!]!
     bookings: [Booking!]!
@@ -139,6 +145,7 @@ type RootMutation {
     deleteDrink(id: ID!): Drink
     signInAttendee(signInAttendeeInput: SignInAttendeeInput): CurrentAttendee
     signUpAttendee(signUpAttendeeInput: SignUpAttendeeInput): Attendee
+    updateAttendeeDrinks(updateAttendeeDrinksInput: UpdateAttendeeDrinksInput): CurrentAttendee
 }
 
 schema {

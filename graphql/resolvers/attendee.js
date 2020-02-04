@@ -23,6 +23,11 @@ module.exports = {
   currentAttendees: async () => {
     try {
       const attendees = await CurrentAttendee.find()
+
+      for (let i = 0; i < attendees.length; i++) {
+        console.log('attendees', attendees[i].drinks)
+      }
+
       return attendees.map(attendee => {
         // console.log(attendee)
         return transformAttendee(attendee)
@@ -95,7 +100,55 @@ module.exports = {
 
   updateAttendeeDrinks: async (args, req) => {
     try {
-      console.log('updateAttendeeDrinks is called!')
+      // console.log('updateAttendeeDrinks is called!')
+      console.log('current attendeeId', args.updateAttendeeDrinksInput._id)
+      const currentAttendee = await CurrentAttendee.findOne({
+        attendeeId: args.updateAttendeeDrinksInput._id,
+      })
+
+      const attendee = await Attendee.findOne({
+        _id: args.updateAttendeeDrinksInput._id,
+      })
+
+      console.log('drinkId', args.updateAttendeeDrinksInput.drinkId)
+      // find the drink
+      const drink = await Drink.findOne({
+        _id: args.updateAttendeeDrinksInput.drinkId,
+      })
+
+      console.log('this is drink', drink)
+      // It is attending the current attendee instead of currentAttendee
+      // CurrentAttendee is just the temporary and the value would be merged
+      // into Attendee once the client side confirms it.
+      drink.count.push({
+        createdAt: new Date(args.updateAttendeeDrinksInput.date),
+        user: attendee,
+      })
+
+      console.log('this is drink', drink)
+      currentAttendee.drinks.push(drink)
+
+      // CurrentAttendee.updateOne(
+      //   { attendeeId: args.updateAttendeeDrinksInput._id },
+      //   { $set: { drinks: currentAttendee.drinks } }
+      // )
+      const result = await currentAttendee.save()
+      await drink.save()
+
+      console.log('currentAttendee.drinks', currentAttendee.drinks)
+
+      const currentAttendee2 = await CurrentAttendee.findOne({
+        attendeeId: args.updateAttendeeDrinksInput._id,
+      })
+
+      console.log('currentAttendee is updated? ', currentAttendee2)
+
+      // Drink.updateOne(
+      //   { _id: args.updateAttendeeDrinksInput.drinkId },
+      //   { $set: { count: drink.count } }
+      // )
+
+      return transformAttendee(result)
     } catch (err) {
       console.log(err)
       throw err
