@@ -19,6 +19,7 @@ const graphQlResolvers = require('./graphql/resolvers/index')
 const isAuth = require('./middleware/is-auth')
 const Drink = require('./models/drink')
 const CurrentAttendee = require('./models/currentAttendee')
+const CurrentDrink = require('./models/currentDrink')
 
 require('dotenv').config({
   path: `.env`,
@@ -63,6 +64,7 @@ mongoose
     // this is one of the example that explains how to modify mongoDB
     // renameFields()
     // resetAttendeeDrinks()
+    // deleteAllCurrentDrinks()
   })
   .catch(err => {
     console.log(err)
@@ -85,6 +87,14 @@ function resetAttendeeDrinks() {
   CurrentAttendee.updateMany({}, { $set: { drinks: [] } }, function(err, data) {
     if (!err) {
       console.log('CurrentAttendee modification is successful')
+    }
+  })
+}
+
+function deleteAllCurrentDrinks() {
+  CurrentDrink.deleteMany({}, function(err, data) {
+    if (!err) {
+      console.log('Deleting all currentDrinks is successful.')
     }
   })
 }

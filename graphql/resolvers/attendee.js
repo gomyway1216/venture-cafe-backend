@@ -27,9 +27,9 @@ module.exports = {
         .populate('drinks')
         .exec()
 
-      for (let i = 0; i < attendees.length; i++) {
-        console.log('attendees', attendees[i].drinks)
-      }
+      // for (let i = 0; i < attendees.length; i++) {
+      //   console.log('attendees', attendees[i].drinks)
+      // }
 
       return attendees.map(attendee => {
         // console.log(attendee)
@@ -104,33 +104,43 @@ module.exports = {
   updateAttendeeDrinks: async (args, req) => {
     try {
       // console.log('updateAttendeeDrinks is called!')
-      console.log('current attendeeId', args.updateAttendeeDrinksInput._id)
+      // console.log('current attendeeId', args.updateAttendeeDrinksInput._id)
       const currentAttendee = await CurrentAttendee.findOne({
         attendeeId: args.updateAttendeeDrinksInput._id,
       })
+        .populate('drinks')
+        .exec()
 
-      const attendee = await Attendee.findOne({
-        _id: args.updateAttendeeDrinksInput._id,
-      })
-
-      console.log('drinkId', args.updateAttendeeDrinksInput.drinkId)
+      // console.log('drinkId', args.updateAttendeeDrinksInput.drinkId)
       // find the drink
       const drink = await Drink.findOne({
         _id: args.updateAttendeeDrinksInput.drinkId,
       })
 
-      console.log('this is drink', drink)
+      // console.log('this is drink', drink)
       // It is attending the current attendee instead of currentAttendee
       // CurrentAttendee is just the temporary and the value would be merged
       // into Attendee once the client side confirms it.
       // this should happen when the front-end code choose to push all the data
       // drink.count.push(new Date(args.updateAttendeeDrinksInput.date))
 
-      const currentDrink = await CurrentDrink.findOne({
+      let currentDrink = await CurrentDrink.findOne({
         drinkId: args.updateAttendeeDrinksInput.drinkId,
       })
 
-      console.log('this is drink', drink)
+      // in the beginning, the drink is not in the table, so add the drink to the table
+      if (!currentDrink) {
+        currentDrink = new CurrentDrink({
+          name: drink.name,
+          drinkId: drink.id,
+          drinkType: drink.drinkType,
+          count: [],
+        })
+        // console.log('is if statement called?', currentDrink)
+      }
+
+      // console.log('this is drink', drink)
+      // console.log('this is currentDrink', currentDrink)
       currentAttendee.drinks.push(drink)
       currentDrink.count.push(new Date(args.updateAttendeeDrinksInput.date))
 
@@ -140,6 +150,8 @@ module.exports = {
       // )
       const result = await currentAttendee.save()
       await currentDrink.save()
+
+      console.log('this is currentDrink', currentDrink)
       // await drink.save()
 
       console.log('currentAttendee.drinks', currentAttendee.drinks)
@@ -154,7 +166,7 @@ module.exports = {
       //   { _id: args.updateAttendeeDrinksInput.drinkId },
       //   { $set: { count: drink.count } }
       // )
-
+      console.log('this is result', result)
       return transformAttendee(result)
     } catch (err) {
       console.log(err)
