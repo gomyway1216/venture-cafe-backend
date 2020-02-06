@@ -75,7 +75,7 @@ const user = async userId => {
 
 const drinkType = async drinkTypeId => {
   try {
-    console.log('drinkTypeId', drinkTypeId)
+    // console.log('drinkTypeId', drinkTypeId)
     const drinkType = await drinkTypeLoader.load(drinkTypeId.toString())
     return {
       ...drinkType._doc,

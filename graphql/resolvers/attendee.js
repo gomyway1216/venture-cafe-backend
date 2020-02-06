@@ -151,22 +151,22 @@ module.exports = {
       const result = await currentAttendee.save()
       await currentDrink.save()
 
-      console.log('this is currentDrink', currentDrink)
+      // console.log('this is currentDrink', currentDrink)
       // await drink.save()
 
-      console.log('currentAttendee.drinks', currentAttendee.drinks)
+      // console.log('currentAttendee.drinks', currentAttendee.drinks)
 
       const currentAttendee2 = await CurrentAttendee.findOne({
         attendeeId: args.updateAttendeeDrinksInput._id,
       })
 
-      console.log('currentAttendee is updated? ', currentAttendee2)
+      // console.log('currentAttendee is updated? ', currentAttendee2)
 
       // Drink.updateOne(
       //   { _id: args.updateAttendeeDrinksInput.drinkId },
       //   { $set: { count: drink.count } }
       // )
-      console.log('this is result', result)
+      // console.log('this is result', result)
       return transformAttendee(result)
     } catch (err) {
       console.log(err)
@@ -212,7 +212,7 @@ module.exports = {
   signInAttendee: async (args, req) => {
     try {
       const attendee = await Attendee.findById(args.signInAttendeeInput._id)
-      console.log('have we find the id?', attendee)
+      // console.log('have we find the id?', attendee)
       if (!attendee) {
         throw err
       }
@@ -236,15 +236,15 @@ module.exports = {
 
       // instead of creating a new user like this, I need to search the attendee table
 
-      console.log('attendee id', attendee.id)
-      console.log('current attendee id', currentAttendee.id)
+      // console.log('attendee id', attendee.id)
+      // console.log('current attendee id', currentAttendee.id)
 
       // console.log('currentAttendee', currentAttendee)
       const result = await currentAttendee.save()
       // console.log(result)
       // return the already existing user (this contains more information)
       createdAttendee = transformAttendee(result)
-      console.log('this is createdAttendee', createdAttendee)
+      // console.log('this is createdAttendee', createdAttendee)
       return createdAttendee
     } catch (err) {
       console.log(err)

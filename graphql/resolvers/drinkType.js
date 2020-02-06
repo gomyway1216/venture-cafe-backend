@@ -9,7 +9,7 @@ module.exports = {
       //   return drinkTypes.map(drinkType => {
       //     return transformDrinkType(drinkType)
       //   })
-      console.log(drinkTypes)
+      // console.log(drinkTypes)
       return drinkTypes
     } catch (err) {
       throw err

@@ -7,7 +7,7 @@ module.exports = {
   events: async () => {
     try {
       const events = await Event.find()
-      console.log('events', events[0])
+      // console.log('events', events[0])
       // console.log('event 1', events[0]._doc)
       // console.log('event id', typeof events[0].id)
       // console.log('event _id', typeof events[0]._id)
@@ -17,8 +17,8 @@ module.exports = {
         return transformEvent(event)
       })
 
-      console.log('eves', evs[0])
-      console.log(events[0] === evs[0])
+      // console.log('eves', evs[0])
+      // console.log(events[0] === evs[0])
       return evs
     } catch (err) {
       throw err

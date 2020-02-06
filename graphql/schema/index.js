@@ -73,6 +73,10 @@ type CurrentDrink {
   count: [String!]!
 }
 
+type ReturnResult {
+  result: String!
+}
+ 
 input AddDrinkTypeInput {
   name: String!
 }
@@ -150,6 +154,8 @@ type RootMutation {
     signInAttendee(signInAttendeeInput: SignInAttendeeInput): CurrentAttendee
     signUpAttendee(signUpAttendeeInput: SignUpAttendeeInput): Attendee
     updateAttendeeDrinks(updateAttendeeDrinksInput: UpdateAttendeeDrinksInput): CurrentAttendee
+    deleteAllCurrentAttendees: Boolean!
+    deleteAllCurrentDrinks: Boolean!
 }
 
 schema {
