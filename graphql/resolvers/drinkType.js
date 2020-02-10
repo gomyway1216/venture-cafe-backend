@@ -29,7 +29,7 @@ module.exports = {
     try {
       const result = await drinkType.save()
       createdDrinkType = transformDrinkType(result)
-      return createdDrinkType
+      return await createdDrinkType
     } catch (err) {
       console.log(err)
       throw err

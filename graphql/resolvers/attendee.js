@@ -10,7 +10,7 @@ module.exports = {
     try {
       const attendees = await Attendee.find()
       // Not sure whether I need to transform
-      return attendees.map(attendee => {
+      return await attendees.map(attendee => {
         // console.log(attendee)
         return transformAttendee(attendee)
       })
@@ -31,7 +31,7 @@ module.exports = {
       //   console.log('attendees', attendees[i].drinks)
       // }
 
-      return attendees.map(attendee => {
+      return await attendees.map(attendee => {
         // console.log(attendee)
         return transformAttendee(attendee)
       })
@@ -41,31 +41,31 @@ module.exports = {
     }
   },
 
-  // create ne Attendee
-  checkInAttendee: async (args, req) => {
-    // I may uncomment this out later.
-    if (!req.isAuth) {
-      throw new Error('Unauthenticated!')
-    }
+  // // create ne Attendee
+  // checkInAttendee: async (args, req) => {
+  //   // I may uncomment this out later.
+  //   if (!req.isAuth) {
+  //     throw new Error('Unauthenticated!')
+  //   }
 
-    const attendee = new Attendee({
-      userId: args.attendeeInput.userId,
-      name: args.attendeeInput.name,
-      drinkCounter: +args.attendeeInput.drinkCounter,
-      date: new Date(args.attendeeInput.date),
-    })
+  //   const attendee = new Attendee({
+  //     userId: args.attendeeInput.userId,
+  //     name: args.attendeeInput.name,
+  //     drinkCounter: +args.attendeeInput.drinkCounter,
+  //     date: new Date(args.attendeeInput.date),
+  //   })
 
-    let createdAttendee
-    try {
-      // console.log('newAttendee', attendee)
-      const result = await attendee.save()
-      createdAttendee = transformAttendee(result)
-      return createdAttendee
-    } catch (err) {
-      console.log(err)
-      throw err
-    }
-  },
+  //   let createdAttendee
+  //   try {
+  //     // console.log('newAttendee', attendee)
+  //     const result = await attendee.save()
+  //     createdAttendee = transformAttendee(result)
+  //     return createdAttendee
+  //   } catch (err) {
+  //     console.log(err)
+  //     throw err
+  //   }
+  // },
 
   //drinkCounterUpdateInput
   // updateDrinkCounter: async (args, req) => {
@@ -167,7 +167,7 @@ module.exports = {
       //   { $set: { count: drink.count } }
       // )
       // console.log('this is result', result)
-      return transformAttendee(result)
+      return await transformAttendee(result)
     } catch (err) {
       console.log(err)
       throw err
@@ -199,7 +199,7 @@ module.exports = {
     try {
       // console.log('newAttendee', attendee)
       const result = await attendee.save()
-      createdAttendee = transformAttendee(result)
+      createdAttendee = await transformAttendee(result)
       return createdAttendee
     } catch (err) {
       console.log(err)
@@ -211,6 +211,19 @@ module.exports = {
   // instead of showing all the users.
   signInAttendee: async (args, req) => {
     try {
+      // to prevent creating two same users -> it was happening
+      console.log('before finding tempCurrentAttendee')
+      const tempCurrentAttendee = await CurrentAttendee.findOne({
+        attendeeId: args.signInAttendeeInput._id,
+      })
+
+      console.log('tempCurrentAttendee', tempCurrentAttendee)
+      if (tempCurrentAttendee) {
+        console.log('the attendee already existed!')
+        const tempCreatedAttendee = await transformAttendee(tempCurrentAttendee)
+        return tempCreatedAttendee
+      }
+
       const attendee = await Attendee.findById(args.signInAttendeeInput._id)
       // console.log('have we find the id?', attendee)
       if (!attendee) {
@@ -243,7 +256,7 @@ module.exports = {
       const result = await currentAttendee.save()
       // console.log(result)
       // return the already existing user (this contains more information)
-      createdAttendee = transformAttendee(result)
+      const createdAttendee = await transformAttendee(result)
       // console.log('this is createdAttendee', createdAttendee)
       return createdAttendee
     } catch (err) {

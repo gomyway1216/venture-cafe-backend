@@ -146,7 +146,6 @@ type RootMutation {
     createUser(userInput: UserInput): User
     bookEvent(eventId: ID!): Booking!
     cancelBooking(bookingId: ID!): Event!
-    checkInAttendee(attendeeInput: AttendeeInput): Attendee
     updateDrinkCounter(drinkCounterUpdateInput: DrinkCounterUpdateInput): Attendee
     addDrinkType(addDrinkTypeInput: AddDrinkTypeInput): DrinkType
     addDrink(addDrinkInput: AddDrinkInput): Drink
@@ -156,6 +155,7 @@ type RootMutation {
     updateAttendeeDrinks(updateAttendeeDrinksInput: UpdateAttendeeDrinksInput): CurrentAttendee
     deleteAllCurrentAttendees: Boolean!
     deleteAllCurrentDrinks: Boolean!
+    saveAllCurrentDrinks(date: String!): Boolean!
 }
 
 schema {

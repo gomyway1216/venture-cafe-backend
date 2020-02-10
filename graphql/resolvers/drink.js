@@ -9,7 +9,7 @@ module.exports = {
     try {
       const drinks = await Drink.find()
 
-      return drinks.map(drink => {
+      return await drinks.map(drink => {
         // console.log(drink)
         return transformDrink(drink)
       })
@@ -50,7 +50,7 @@ module.exports = {
 
   deleteDrink: async (args, req) => {
     try {
-      const deletingDrink = Drink.findOne({ _id: args.id })
+      const deletingDrink = await Drink.findOne({ _id: args.id })
       await Drink.deleteOne({ _id: args.id })
       return deletingDrink
     } catch (err) {
@@ -61,7 +61,7 @@ module.exports = {
 
   users: async (args, req) => {
     try {
-      const allUsers = User.find()
+      const allUsers = await User.find()
       return allUsers
     } catch (err) {
       console.log(err)
