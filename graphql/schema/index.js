@@ -76,6 +76,17 @@ type CurrentDrink {
 type ReturnResult {
   result: String!
 }
+
+type DrinkAndDate {
+  drink: Drink!
+  date: String!
+}
+
+type DailyDrinks {
+  _id: ID!
+  date: String!
+  drinks: [DrinkAndDate!]
+}
  
 input AddDrinkTypeInput {
   name: String!
@@ -139,6 +150,7 @@ type RootQuery {
     drinkTypes: [DrinkType!]!
     drinks: [Drink!]!
     currentDrinks: [CurrentDrink!]!
+    dailyDrinksList: [DailyDrinks!]!
 }
 
 type RootMutation {

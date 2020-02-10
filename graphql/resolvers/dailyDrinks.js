@@ -1,6 +1,8 @@
 const DailyDrinks = require('../../models/dailyDrinks')
 const CurrentDrink = require('../../models/currentDrink')
 const CurrentAttendee = require('../../models/currentAttendee')
+const { transformDailyDrinks } = require('./merge')
+const Drink = require('../../models/drink')
 
 module.exports = {
   saveAllCurrentDrinks: async (args, req) => {
@@ -31,7 +33,7 @@ module.exports = {
         if (
           currentDate.getFullYear() === comparingDate.getFullYear() &&
           currentDate.getMonth() === comparingDate.getMonth() &&
-          currentDate.getDate() === currentDate.getDate()
+          currentDate.getDate() === comparingDate.getDate()
         ) {
           foundDate = dailyDrinksList[i]
           break
@@ -70,6 +72,43 @@ module.exports = {
       })
 
       return true
+    } catch (err) {
+      console.log(err)
+      throw err
+    }
+  },
+
+  dailyDrinksList: async (args, req) => {
+    try {
+      const savedDailyDrinksList = await DailyDrinks.find().populate({
+        path: 'drinks.drink',
+        model: 'Drink',
+        populate: [
+          {
+            path: 'drinkType',
+            model: 'DrinkType',
+          },
+        ],
+      })
+
+      // this works when just populating drink
+      // above works two the next nested level.
+      // .populate('drinks.drink')
+      // .exec(function(err, data) {
+      //   if (err) {
+      //     console.log(err)
+      //   } else {
+      //     DailyDrinks.populate('drinks.drink.drinkType')
+      //   }
+      // })
+
+      //   console.log('savedDailyDrinksList', savedDailyDrinksList)
+      const convertedList = savedDailyDrinksList.map(sds =>
+        transformDailyDrinks(sds)
+      )
+
+      const resultString = JSON.stringify(convertedList, null, 2)
+      return JSON.parse(resultString)
     } catch (err) {
       console.log(err)
       throw err

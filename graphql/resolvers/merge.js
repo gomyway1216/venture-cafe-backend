@@ -132,11 +132,20 @@ const transformDrink = drink => {
   }
 }
 
+const transformDailyDrinks = dailyDrinks => {
+  return {
+    ...dailyDrinks._doc,
+    _id: dailyDrinks.id,
+    date: dateToString(dailyDrinks._doc.date),
+  }
+}
+
 exports.transformEvent = transformEvent
 exports.transformBooking = transformBooking
 exports.transformAttendee = transformAttendee
 // exports.transformDrinkType = transformDrinkType
 exports.transformDrink = transformDrink
+exports.transformDailyDrinks = transformDailyDrinks
 
 // exports.user = user;
 // exports.events = events;
