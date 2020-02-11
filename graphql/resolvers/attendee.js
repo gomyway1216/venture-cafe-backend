@@ -1,9 +1,8 @@
 const Attendee = require('../../models/attendee')
 const CurrentAttendee = require('../../models/currentAttendee')
-const Drink = require('../../models/drink')
-const CurrentDrink = require('../../models/currentDrink')
 
 const { transformAttendee } = require('./merge')
+const moment = require('moment')
 
 module.exports = {
   attendees: async () => {
@@ -35,139 +34,6 @@ module.exports = {
         // console.log(attendee)
         return transformAttendee(attendee)
       })
-    } catch (err) {
-      console.log(err)
-      throw err
-    }
-  },
-
-  // // create ne Attendee
-  // checkInAttendee: async (args, req) => {
-  //   // I may uncomment this out later.
-  //   if (!req.isAuth) {
-  //     throw new Error('Unauthenticated!')
-  //   }
-
-  //   const attendee = new Attendee({
-  //     userId: args.attendeeInput.userId,
-  //     name: args.attendeeInput.name,
-  //     drinkCounter: +args.attendeeInput.drinkCounter,
-  //     date: new Date(args.attendeeInput.date),
-  //   })
-
-  //   let createdAttendee
-  //   try {
-  //     // console.log('newAttendee', attendee)
-  //     const result = await attendee.save()
-  //     createdAttendee = transformAttendee(result)
-  //     return createdAttendee
-  //   } catch (err) {
-  //     console.log(err)
-  //     throw err
-  //   }
-  // },
-
-  //drinkCounterUpdateInput
-  // updateDrinkCounter: async (args, req) => {
-  //   try {
-  //     // const attendee = await Attendee.findOneAndUpdate(
-  //     //   { userId: args.drinkCounterUpdateInput.userId },
-  //     //   { drinkCounter: args.drinkCounterUpdateInput.drinkCounter },
-  //     //   { new: true }
-  //     // )
-  //     const attendee = await Attendee.findOne({
-  //       userId: args.drinkCounterUpdateInput.userId,
-  //     })
-  //     // console.log('attendee', attendee)
-  //     // console.log(args.drinkCounterUpdateInput.drinkCounter)
-  //     attendee.drinkCounter = args.drinkCounterUpdateInput.drinkCounter
-  //     const drink = await Drink.findOne({
-  //       _id: args.drinkCounterUpdateInput.drinkId,
-  //     })
-  //     // push the drink to the attendee's drink list
-  //     attendee.drinks.push(drink)
-
-  //     // update the drink
-  //     // const drinkCount = {
-  //     //   createdAt: new Date(args.drinkCounterUpdateInput.date),
-  //     //   user: attendee.id,
-  //     // }
-  //     drink.count.push(new Date(args.drinkCounterUpdateInput.date))
-
-  //     return attendee
-  //   } catch (err) {
-  //     console.log(err)
-  //     throw err
-  //   }
-  // },
-
-  updateAttendeeDrinks: async (args, req) => {
-    try {
-      // console.log('updateAttendeeDrinks is called!')
-      // console.log('current attendeeId', args.updateAttendeeDrinksInput._id)
-      const currentAttendee = await CurrentAttendee.findOne({
-        attendeeId: args.updateAttendeeDrinksInput._id,
-      })
-        .populate('drinks')
-        .exec()
-
-      // console.log('drinkId', args.updateAttendeeDrinksInput.drinkId)
-      // find the drink
-      const drink = await Drink.findOne({
-        _id: args.updateAttendeeDrinksInput.drinkId,
-      })
-
-      // console.log('this is drink', drink)
-      // It is attending the current attendee instead of currentAttendee
-      // CurrentAttendee is just the temporary and the value would be merged
-      // into Attendee once the client side confirms it.
-      // this should happen when the front-end code choose to push all the data
-      // drink.count.push(new Date(args.updateAttendeeDrinksInput.date))
-
-      let currentDrink = await CurrentDrink.findOne({
-        drinkId: args.updateAttendeeDrinksInput.drinkId,
-      })
-
-      // in the beginning, the drink is not in the table, so add the drink to the table
-      if (!currentDrink) {
-        currentDrink = new CurrentDrink({
-          name: drink.name,
-          drinkId: drink.id,
-          drinkType: drink.drinkType,
-          count: [],
-        })
-        // console.log('is if statement called?', currentDrink)
-      }
-
-      // console.log('this is drink', drink)
-      // console.log('this is currentDrink', currentDrink)
-      currentAttendee.drinks.push(drink)
-      currentDrink.count.push(new Date(args.updateAttendeeDrinksInput.date))
-
-      // CurrentAttendee.updateOne(
-      //   { attendeeId: args.updateAttendeeDrinksInput._id },
-      //   { $set: { drinks: currentAttendee.drinks } }
-      // )
-      const result = await currentAttendee.save()
-      await currentDrink.save()
-
-      // console.log('this is currentDrink', currentDrink)
-      // await drink.save()
-
-      // console.log('currentAttendee.drinks', currentAttendee.drinks)
-
-      const currentAttendee2 = await CurrentAttendee.findOne({
-        attendeeId: args.updateAttendeeDrinksInput._id,
-      })
-
-      // console.log('currentAttendee is updated? ', currentAttendee2)
-
-      // Drink.updateOne(
-      //   { _id: args.updateAttendeeDrinksInput.drinkId },
-      //   { $set: { count: drink.count } }
-      // )
-      // console.log('this is result', result)
-      return await transformAttendee(result)
     } catch (err) {
       console.log(err)
       throw err
