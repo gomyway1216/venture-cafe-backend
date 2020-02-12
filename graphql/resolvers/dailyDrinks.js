@@ -3,6 +3,7 @@ const CurrentDrink = require('../../models/currentDrink')
 const CurrentAttendee = require('../../models/currentAttendee')
 const { transformDailyDrinks } = require('./merge')
 const Drink = require('../../models/drink')
+const moment = require('moment')
 
 module.exports = {
   saveAllCurrentDrinks: async (args, req) => {
@@ -13,8 +14,6 @@ module.exports = {
       const drinkGroupDate = args.date
       const drinkAndDate = []
       currentDrinks.map(currentDrink => {
-        console.log('currentDrinks.drinkId', currentDrink.drinkId)
-        // currentDrinks.count.map()
         currentDrink.count.map(drinkDate => {
           drinkAndDate.push({
             drink: currentDrink.drinkId,
@@ -25,16 +24,12 @@ module.exports = {
 
       console.log('drinkAndDate', drinkAndDate)
 
-      const comparingDate = new Date(drinkGroupDate)
+      const comparingDate = moment(drinkGroupDate)
       const dailyDrinksList = await DailyDrinks.find()
       let foundDate
       for (let i = 0; i < dailyDrinksList.length; i++) {
-        const currentDate = dailyDrinksList[i].date
-        if (
-          currentDate.getFullYear() === comparingDate.getFullYear() &&
-          currentDate.getMonth() === comparingDate.getMonth() &&
-          currentDate.getDate() === comparingDate.getDate()
-        ) {
+        // const currentDate = moment(dailyDrinksList[i].date)
+        if (comparingDate.isSame(dailyDrinksList[i].date, 'day')) {
           foundDate = dailyDrinksList[i]
           break
         }
@@ -46,7 +41,7 @@ module.exports = {
         await foundDate.save()
       } else {
         const dailyDrinks = new DailyDrinks({
-          date: comparingDate,
+          date: drinkGroupDate,
           drinks: drinkAndDate,
         })
         await dailyDrinks.save()

@@ -2,6 +2,7 @@ const CurrentAttendee = require('../../models/currentAttendee')
 const Drink = require('../../models/drink')
 const CurrentDrink = require('../../models/currentDrink')
 const { transformAttendee } = require('./merge')
+const moment = require('moment')
 
 module.exports = {
   updateAttendeeDrinks: async (args, req) => {
@@ -40,7 +41,16 @@ module.exports = {
       }
 
       currentAttendee.drinks.push(drink)
-      currentDrink.count.push(new Date(args.updateAttendeeDrinksInput.date))
+
+      // console.log('this is the date', args.updateAttendeeDrinksInput.date)
+      // const tempDate = new Date(args.updateAttendeeDrinksInput.date)
+      // console.log('this is the date object', tempDate)
+      // console.log('this is the date object', tempDate.toString())
+      // console.log('date: ', tempDate.getDate())
+      // console.log('hours: ', tempDate.getHours())
+      // console.log(moment(args.updateAttendeeDrinksInput.date))
+
+      currentDrink.count.push(args.updateAttendeeDrinksInput.date)
 
       // CurrentAttendee.updateOne(
       //   { attendeeId: args.updateAttendeeDrinksInput._id },

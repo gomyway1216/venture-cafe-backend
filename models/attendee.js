@@ -16,11 +16,11 @@ const attendeeSchema = new Schema({
     required: true,
   },
   signUpDate: {
-    type: Date,
+    type: String,
     required: true,
   },
   lastSignInDate: {
-    type: Date,
+    type: String,
   },
   drinks: [
     {

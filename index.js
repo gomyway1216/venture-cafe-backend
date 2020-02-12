@@ -20,6 +20,8 @@ const isAuth = require('./middleware/is-auth')
 const Drink = require('./models/drink')
 const CurrentAttendee = require('./models/currentAttendee')
 const CurrentDrink = require('./models/currentDrink')
+const DailyDrinks = require('./models/dailyDrinks')
+const moment = require('moment')
 
 require('dotenv').config({
   path: `.env`,
@@ -65,6 +67,7 @@ mongoose
     // renameFields()
     // resetAttendeeDrinks()
     // deleteAllCurrentDrinks()
+    updateDailyDrinksFormat()
   })
   .catch(err => {
     console.log(err)
@@ -98,3 +101,72 @@ function deleteAllCurrentDrinks() {
     }
   })
 }
+
+// this is used when converting all the date format string to moment format string
+
+function updateDailyDrinksFormat() {
+  // DailyDrinks.update(
+  //   { date: { $regex: '^Sun' } },
+  //   { $set: { date: 'hello' } }
+  //   // { multi: true }
+  // )
+  // DailyDrinks.find({}, (err, data) => {
+  //   if (err) {
+  //     console.log(err)
+  //   }
+  //   data.date = moment(new Date(data.date)).format()
+  //   data.save((err, contractContract) => {
+  //     if (err) return handleError(err)
+  //   })
+  // })
+  // DailyDrinks.find({}).exec(function(err, data) {
+  //   if (err) {
+  //     console.log(err)
+  //   }
+  //   DailyDrinks.findAndModify(
+  //     { date: { $regex: '^Sun' } },
+  //     {
+  //       $set: {
+  //         date: moment(new Date(data.date)).format(),
+  //       },
+  //     },
+  //     {
+  //       new: true,
+  //     },
+  //     function(err, doc) {
+  //       if (err) console.log(err)
+  //       console.log(doc)
+  //     }
+  //   )
+  // })
+  // DailyDrinks.find({ date: { $regex: '^Sun' } }, (err, data) => {
+  //   if (err) console.log(err)
+  //   data.name = moment(new Date(data.date)).format()
+  //   data.save((err, updatedCat) => {
+  //     if (err) console.log(err)
+  //   })
+  // })
+  // DailyDrinks.find().then(data => {
+  //   data.forEach(function(data) {
+  //     console.log(data.date)
+  //     data.update(
+  //       { date: { $regex: '^Sun' } },
+  //       { $set: { date: moment(new Date(data.date)).format() } }
+  //       // { multi: true }
+  //     )
+  //     console.log('this is moment', moment(new Date(data.date)).format())
+  //     console.log('after update')
+  //     console.log(data.date)
+  //   })
+  // })
+}
+
+// .forEach(function(doc) {
+//   doc.date =
+//   doc.save()
+// { date: moment(new Date(date)).format() },
+// function(err, data) {
+//   if (!err) {
+//     console.log('successfully updated daily drinks')
+//   }
+// }

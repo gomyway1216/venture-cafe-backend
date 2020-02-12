@@ -6,7 +6,7 @@ const dailyDrinksSchema = new Schema({
   // group by the same date. But also saves the detailed time for each drink
   // in order to add slicing functionality by time
   date: {
-    type: Date,
+    type: String,
     required: true,
   },
   drinks: [
@@ -16,7 +16,7 @@ const dailyDrinksSchema = new Schema({
         ref: 'Drink',
       },
       date: {
-        type: Date,
+        type: String,
         required: true,
       },
     },

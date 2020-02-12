@@ -16,7 +16,7 @@ const currentDrinkSchema = new Schema({
     ref: 'DrinkType',
   },
   count: {
-    type: [Date],
+    type: [String],
     required: true,
   },
 })

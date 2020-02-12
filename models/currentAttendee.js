@@ -16,7 +16,7 @@ const currentAttendeeSchema = new Schema({
     required: true,
   },
   lastSignInDate: {
-    type: Date,
+    type: String,
     required: true,
   },
   drinks: [

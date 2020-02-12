@@ -57,7 +57,7 @@ module.exports = {
       firstName: args.signUpAttendeeInput.firstName,
       lastName: args.signUpAttendeeInput.lastName,
       email: args.signUpAttendeeInput.email,
-      signUpDate: new Date(args.signUpAttendeeInput.date),
+      signUpDate: args.signUpAttendeeInput.date,
     })
     // it is skipping lastSignInDate for now
 
@@ -109,7 +109,7 @@ module.exports = {
           attendeeId: attendee.id,
           firstName: attendee.firstName,
           lastName: attendee.lastName,
-          lastSignInDate: new Date(args.signInAttendeeInput.date),
+          lastSignInDate: args.signInAttendeeInput.date,
         })
       }
 

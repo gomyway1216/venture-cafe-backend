@@ -136,7 +136,7 @@ const transformDailyDrinks = dailyDrinks => {
   return {
     ...dailyDrinks._doc,
     _id: dailyDrinks.id,
-    date: dateToString(dailyDrinks._doc.date),
+    // date: dateToString(dailyDrinks._doc.date),
   }
 }
 
