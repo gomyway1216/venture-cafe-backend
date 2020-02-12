@@ -25,8 +25,10 @@ module.exports = {
       const dailyDrinksList = await DailyDrinks.find()
       let foundDate
       for (let i = 0; i < dailyDrinksList.length; i++) {
-        const currentDate = moment(dailyDrinksList[i].date)
+        // const currentDate = moment(dailyDrinksList[i].date)
         if (comparingDate.isSame(dailyDrinksList[i].date, 'day')) {
+          console.log('drinkGroupDate', drinkGroupDate)
+          console.log('dailyDrinksList[i].date', dailyDrinksList[i].date)
           foundDate = dailyDrinksList[i]
           break
         }
