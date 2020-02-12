@@ -29,6 +29,7 @@ module.exports = {
         if (comparingDate.isSame(dailyDrinksList[i].date, 'day')) {
           console.log('drinkGroupDate', drinkGroupDate)
           console.log('dailyDrinksList[i].date', dailyDrinksList[i].date)
+          console.log(comparingDate.isSame(dailyDrinksList[i].date, 'day'))
           foundDate = dailyDrinksList[i]
           break
         }
