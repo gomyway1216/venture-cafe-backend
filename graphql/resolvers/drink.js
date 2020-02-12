@@ -1,7 +1,6 @@
 const Drink = require('../../models/drink')
 const DrinkType = require('../../models/drinkType')
 const User = require('../../models/user')
-
 const { transformDrink } = require('./merge')
 
 module.exports = {
@@ -10,7 +9,6 @@ module.exports = {
       const drinks = await Drink.find()
 
       return await drinks.map(drink => {
-        // console.log(drink)
         return transformDrink(drink)
       })
     } catch (err) {
@@ -20,9 +18,9 @@ module.exports = {
   },
 
   addDrink: async (args, req) => {
-    // if (!req.isAuth) {
-    //     throw new Error('Unauthenticated!')
-    //   }
+    if (!req.isAuth) {
+      throw new Error('Unauthenticated!')
+    }
 
     const drink = new Drink({
       name: args.addDrinkInput.name,
@@ -42,7 +40,6 @@ module.exports = {
 
       return createdDrink
     } catch (err) {
-      console.log('error here')
       console.log(err)
       throw err
     }

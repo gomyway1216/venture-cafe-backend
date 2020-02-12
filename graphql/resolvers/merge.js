@@ -75,7 +75,6 @@ const user = async userId => {
 
 const drinkType = async drinkTypeId => {
   try {
-    // console.log('drinkTypeId', drinkTypeId)
     const drinkType = await drinkTypeLoader.load(drinkTypeId.toString())
     return {
       ...drinkType._doc,
@@ -116,13 +115,6 @@ const transformAttendee = attendee => {
   }
 }
 
-// const transformDrinkType = drinkType => {
-//   return {
-//     ...drinkType._doc,
-//     _id: drinkType.id,
-//   }
-// }
-
 // I guess it won't matter whether drink._doc.drinkType or drink.drinkType
 const transformDrink = drink => {
   return {
@@ -136,17 +128,11 @@ const transformDailyDrinks = dailyDrinks => {
   return {
     ...dailyDrinks._doc,
     _id: dailyDrinks.id,
-    // date: dateToString(dailyDrinks._doc.date),
   }
 }
 
 exports.transformEvent = transformEvent
 exports.transformBooking = transformBooking
 exports.transformAttendee = transformAttendee
-// exports.transformDrinkType = transformDrinkType
 exports.transformDrink = transformDrink
 exports.transformDailyDrinks = transformDailyDrinks
-
-// exports.user = user;
-// exports.events = events;
-// exports.singleEvent = singleEvent;

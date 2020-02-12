@@ -1,14 +1,3 @@
-// const express = require('express')
-// const path = require('path')
-// const PORT = process.env.PORT || 5000
-
-// express()
-//   .use(express.static(path.join(__dirname, 'public')))
-//   .set('views', path.join(__dirname, 'views'))
-//   .set('view engine', 'ejs')
-//   .get('/', (req, res) => res.render('pages/index'))
-//   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
-
 const express = require('express')
 const bodyParser = require('body-parser')
 const graphqlHttp = require('express-graphql')
@@ -65,9 +54,6 @@ mongoose
     console.log('connected to db!')
     // this is one of the example that explains how to modify mongoDB
     // renameFields()
-    // resetAttendeeDrinks()
-    // deleteAllCurrentDrinks()
-    updateDailyDrinksFormat()
   })
   .catch(err => {
     console.log(err)
@@ -101,72 +87,3 @@ function deleteAllCurrentDrinks() {
     }
   })
 }
-
-// this is used when converting all the date format string to moment format string
-
-function updateDailyDrinksFormat() {
-  // DailyDrinks.update(
-  //   { date: { $regex: '^Sun' } },
-  //   { $set: { date: 'hello' } }
-  //   // { multi: true }
-  // )
-  // DailyDrinks.find({}, (err, data) => {
-  //   if (err) {
-  //     console.log(err)
-  //   }
-  //   data.date = moment(new Date(data.date)).format()
-  //   data.save((err, contractContract) => {
-  //     if (err) return handleError(err)
-  //   })
-  // })
-  // DailyDrinks.find({}).exec(function(err, data) {
-  //   if (err) {
-  //     console.log(err)
-  //   }
-  //   DailyDrinks.findAndModify(
-  //     { date: { $regex: '^Sun' } },
-  //     {
-  //       $set: {
-  //         date: moment(new Date(data.date)).format(),
-  //       },
-  //     },
-  //     {
-  //       new: true,
-  //     },
-  //     function(err, doc) {
-  //       if (err) console.log(err)
-  //       console.log(doc)
-  //     }
-  //   )
-  // })
-  // DailyDrinks.find({ date: { $regex: '^Sun' } }, (err, data) => {
-  //   if (err) console.log(err)
-  //   data.name = moment(new Date(data.date)).format()
-  //   data.save((err, updatedCat) => {
-  //     if (err) console.log(err)
-  //   })
-  // })
-  // DailyDrinks.find().then(data => {
-  //   data.forEach(function(data) {
-  //     console.log(data.date)
-  //     data.update(
-  //       { date: { $regex: '^Sun' } },
-  //       { $set: { date: moment(new Date(data.date)).format() } }
-  //       // { multi: true }
-  //     )
-  //     console.log('this is moment', moment(new Date(data.date)).format())
-  //     console.log('after update')
-  //     console.log(data.date)
-  //   })
-  // })
-}
-
-// .forEach(function(doc) {
-//   doc.date =
-//   doc.save()
-// { date: moment(new Date(date)).format() },
-// function(err, data) {
-//   if (!err) {
-//     console.log('successfully updated daily drinks')
-//   }
-// }

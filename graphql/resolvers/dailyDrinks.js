@@ -2,7 +2,6 @@ const DailyDrinks = require('../../models/dailyDrinks')
 const CurrentDrink = require('../../models/currentDrink')
 const CurrentAttendee = require('../../models/currentAttendee')
 const { transformDailyDrinks } = require('./merge')
-const Drink = require('../../models/drink')
 const moment = require('moment')
 
 module.exports = {
@@ -21,8 +20,6 @@ module.exports = {
           })
         })
       })
-
-      console.log('drinkAndDate', drinkAndDate)
 
       const comparingDate = moment(drinkGroupDate)
       const dailyDrinksList = await DailyDrinks.find()
@@ -45,7 +42,6 @@ module.exports = {
           drinks: drinkAndDate,
         })
         await dailyDrinks.save()
-        console.log('this is daily drinks', dailyDrinks)
       }
 
       // clean up the current drinks after saving all the data
@@ -86,18 +82,6 @@ module.exports = {
         ],
       })
 
-      // this works when just populating drink
-      // above works two the next nested level.
-      // .populate('drinks.drink')
-      // .exec(function(err, data) {
-      //   if (err) {
-      //     console.log(err)
-      //   } else {
-      //     DailyDrinks.populate('drinks.drink.drinkType')
-      //   }
-      // })
-
-      //   console.log('savedDailyDrinksList', savedDailyDrinksList)
       const convertedList = savedDailyDrinksList.map(sds =>
         transformDailyDrinks(sds)
       )

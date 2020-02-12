@@ -7,7 +7,6 @@ module.exports = {
       const currentDrinks = await CurrentDrink.find()
 
       return await currentDrinks.map(drink => {
-        // console.log('currentDrinks', drink)
         return transformDrink(drink)
       })
     } catch (err) {

@@ -6,10 +6,6 @@ module.exports = {
       const drinkTypes = await DrinkType.find()
         .populate('createdDrinks')
         .exec()
-      //   return drinkTypes.map(drinkType => {
-      //     return transformDrinkType(drinkType)
-      //   })
-      // console.log(drinkTypes)
       return drinkTypes
     } catch (err) {
       throw err
@@ -17,9 +13,9 @@ module.exports = {
   },
 
   addDrinkType: async (args, req) => {
-    // if (!req.isAuth) {
-    //   throw new Error('Unauthenticated!')
-    // }
+    if (!req.isAuth) {
+      throw new Error('Unauthenticated!')
+    }
 
     const drinkType = new DrinkType({
       name: args.addDrinkTypeInput.name,
