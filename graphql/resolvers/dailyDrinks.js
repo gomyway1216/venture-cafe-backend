@@ -2,7 +2,7 @@ const DailyDrinks = require('../../models/dailyDrinks')
 const CurrentDrink = require('../../models/currentDrink')
 const CurrentAttendee = require('../../models/currentAttendee')
 const { transformDailyDrinks } = require('./merge')
-const moment = require('moment')
+const moment = require('moment-timezone')
 
 module.exports = {
   saveAllCurrentDrinks: async (args, req) => {
@@ -21,15 +21,26 @@ module.exports = {
         })
       })
 
-      const comparingDate = moment(drinkGroupDate)
+      const comparingDate = moment(drinkGroupDate).tz('Asia/Tokyo')
       const dailyDrinksList = await DailyDrinks.find()
       let foundDate
+      console.log('comparingDate', comparingDate.format())
       for (let i = 0; i < dailyDrinksList.length; i++) {
         // const currentDate = moment(dailyDrinksList[i].date)
-        if (comparingDate.isSame(dailyDrinksList[i].date, 'day')) {
-          console.log('drinkGroupDate', drinkGroupDate)
-          console.log('dailyDrinksList[i].date', dailyDrinksList[i].date)
-          console.log(comparingDate.isSame(dailyDrinksList[i].date, 'day'))
+
+        console.log(
+          'dailyDrinksList[i].date',
+          moment(dailyDrinksList[i].date)
+            .tz('Asia/Tokyo')
+            .format()
+        )
+        if (
+          comparingDate.isSame(
+            moment(dailyDrinksList[i].date).tz('Asia/Tokyo'),
+            'day'
+          )
+        ) {
+          console.log('same thing found!')
           foundDate = dailyDrinksList[i]
           break
         }
