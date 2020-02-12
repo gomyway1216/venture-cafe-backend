@@ -21,26 +21,17 @@ module.exports = {
         })
       })
 
+      // comparing objects based on time of Tokyo because this app is used in Tokyo
       const comparingDate = moment(drinkGroupDate).tz('Asia/Tokyo')
       const dailyDrinksList = await DailyDrinks.find()
       let foundDate
-      console.log('comparingDate', comparingDate.format())
       for (let i = 0; i < dailyDrinksList.length; i++) {
-        // const currentDate = moment(dailyDrinksList[i].date)
-
-        console.log(
-          'dailyDrinksList[i].date',
-          moment(dailyDrinksList[i].date)
-            .tz('Asia/Tokyo')
-            .format()
-        )
         if (
           comparingDate.isSame(
             moment(dailyDrinksList[i].date).tz('Asia/Tokyo'),
             'day'
           )
         ) {
-          console.log('same thing found!')
           foundDate = dailyDrinksList[i]
           break
         }
