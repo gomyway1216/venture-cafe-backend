@@ -29,3 +29,6 @@ $ heroku create
 $ git push heroku master
 $ heroku open
 ```
+
+## Language and libraries
+JavaScript, Node.js, express.js, GraphQL, Mongoose, MongoDB
