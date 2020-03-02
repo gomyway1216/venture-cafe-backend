@@ -17,6 +17,18 @@ module.exports = {
     }
   },
 
+  // drinksByType: async () => {
+  //   try {
+  //     const drinkTypes = await DrinkType.find()
+  //       const drinks = await Drink.find()
+  //       const updatedDrinks = await drinks.map(drink => transformDrink(drink))
+
+  //   } catch (err) {
+  //     console.log(err)
+  //     throw err
+  //   }
+  // },
+
   addDrink: async (args, req) => {
     if (!req.isAuth) {
       throw new Error('Unauthenticated!')

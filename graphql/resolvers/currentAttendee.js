@@ -12,10 +12,15 @@ module.exports = {
         .populate('drinks')
         .exec()
 
+      console.log('args', args)
       // find the drink
       const drink = await Drink.findOne({
         _id: args.updateAttendeeDrinksInput.drinkId,
       })
+
+      if (!drink) {
+        throw err
+      }
 
       let currentDrink = await CurrentDrink.findOne({
         drinkId: args.updateAttendeeDrinksInput.drinkId,

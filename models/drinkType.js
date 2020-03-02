@@ -7,10 +7,10 @@ const drinkTypeSchema = new Schema({
     type: String,
     required: true,
   },
-  createdDrinks: [
+  registeredDrinkList: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'Drink',
+      ref: 'RegisteredDrinkType',
     },
   ],
 })
