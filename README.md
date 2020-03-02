@@ -5,6 +5,7 @@ This is a project cooperating with Venture Cafe Tokyo. This application keeps tr
 
 ## Getting Started
 To run this project, ccess keys to MongoDB is required. Currently the keys are hidden because it is using confidential data.
+This app runs on Heroku.
 
 ### Prerequisites
 Node, Heroku Account, Heroku console, Access Keys to MongoDB
@@ -32,3 +33,6 @@ $ heroku open
 
 ## Language and libraries
 JavaScript, Node.js, express.js, GraphQL, Mongoose, MongoDB
+
+## Task
+Working on renaming and restructuring.
