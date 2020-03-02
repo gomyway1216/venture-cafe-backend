@@ -15,13 +15,12 @@ This would install all the dependencies
 ```
 $ npm install
 ```
-This app should now be running on [localhost:5000](http://localhost:5000/).
 
 ### Running Locally
 ```
 $ npm start
 ```
-This app should now be running on [localhost:5000](http://localhost:5000/).
+This app runs on [localhost:5000](http://localhost:5000/).
 
 ### Deploying to Heroku
 
