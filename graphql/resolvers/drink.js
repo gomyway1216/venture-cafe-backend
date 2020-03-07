@@ -1,5 +1,5 @@
 const Drink = require('../../models/drink')
-const DrinkType = require('../../models/drinkType')
+const DrinkType = require('../../models/drinkSchemas/drinkType')
 const User = require('../../models/user')
 const { transformDrink } = require('./merge')
 

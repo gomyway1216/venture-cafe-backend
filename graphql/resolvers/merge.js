@@ -1,5 +1,5 @@
 const DataLoader = require('dataloader')
-const DrinkType = require('../../models/drinkType')
+const DrinkType = require('../../models/drinkSchemas/drinkType')
 const Drink = require('../../models/drink')
 
 const drinkTypeLoader = new DataLoader(drinkTypeIds => {

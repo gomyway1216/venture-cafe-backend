@@ -1,4 +1,4 @@
-const DrinkType = require('../../models/drinkType')
+const DrinkType = require('../../models/drinkSchemas/drinkType')
 
 module.exports = {
   drinkTypes: async () => {

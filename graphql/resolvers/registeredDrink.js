@@ -1,5 +1,5 @@
-const RegisteredDrink = require('../../models/drink')
-const DrinkType = require('../../models/drinkType')
+const RegisteredDrink = require('../../models/drinkSchemas/drink')
+const DrinkType = require('../../models/drinkSchemas/drinkType')
 const { transformDrink } = require('./merge')
 
 module.exports = {
