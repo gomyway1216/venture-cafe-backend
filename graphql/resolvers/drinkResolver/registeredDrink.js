@@ -24,13 +24,14 @@ module.exports = {
    * Endpoint to add registeredDrink.
    *
    * @param {string} name name of the registering drink
-   * @param {string} drinkTypeId id of the drink type of the registering drink
+   * @param {string} drinkTypeId id of the drink type of the registering drink,
+   * this is passing drinkType id not drinkType, because frontend doesn't know what drinkType is
    * @return {RegisteredDrink} created RegisteredDrink
    */
   addRegisteredDrink: async (args, req) => {
     try {
       const drinkType = await DrinkType.findOne({
-        _id: args.addRegisteredDrink.drinkTypeId,
+        _id: args.addRegisteredDrinkInput.drinkTypeId,
       })
       //safety checking
       if (!drinkType) {
@@ -39,25 +40,23 @@ module.exports = {
 
       // safety checking
       const foundRegisteredDrink = await RegisteredDrink.findOne({
-        _id: args.addRegisteredDrink.id,
+        name: args.addRegisteredDrinkInput.name,
       })
       if (foundRegisteredDrink) {
         throw new Error('The registering drink already exists.')
       }
 
       const newRegisteredDrink = new RegisteredDrink({
-        name: args.addRegisteredDrink.name,
-        drinkType: args.addRegisteredDrink.drinkTypeId,
+        name: args.addRegisteredDrinkInput.name,
+        drinkType: args.addRegisteredDrinkInput.drinkTypeId,
       })
 
-      // also adds to the registeredDrinkList of drinkType
-      const result = await newRegisteredDrink.save()
-      // drinkType.registeredDrinkList.push(newRegisteredDrink)
-      // await drinkType.save()
-
       // return the created drink
-      return result
-      // return transformDrink(result)
+      return newRegisteredDrink
+        .save()
+        .then(newRegisteredDrink =>
+          newRegisteredDrink.populate('drinkType').execPopulate()
+        )
     } catch (err) {
       console.log(err)
       throw err
@@ -73,9 +72,7 @@ module.exports = {
    */
   existRegisteredDrink: async (args, req) => {
     try {
-      const registeredDrinkFound = await findRegisteredDrinkHelper(
-        args.existRegisteredDrinkInput.id
-      )
+      const registeredDrinkFound = await findRegisteredDrinkHelper(args.id)
       if (registeredDrinkFound) {
         return true
       } else {
@@ -97,7 +94,7 @@ module.exports = {
   getRegisteredDrink: async (args, req) => {
     try {
       const registeredDrink = await RegisteredDrink.findOne({
-        _id: args.getRegisteredDrinkInput.id,
+        _id: args.id,
       })
 
       // if available drink is not found, return null explicitly
@@ -118,17 +115,15 @@ module.exports = {
    * @return {boolean} returns true if deletion is successful,
    * otherwise returns false
    */
-  deleteAvailableDrink: async (args, req) => {
+  deleteRegisteredDrink: async (args, req) => {
     try {
-      const registeredDrinkFound = await findRegisteredDrinkHelper(
-        args.deleteRegisteredDrinkInput.id
-      )
+      const registeredDrinkFound = await findRegisteredDrinkHelper(args.id)
       if (!registeredDrinkFound) {
         return false
       }
 
       await RegisteredDrink.deleteOne({
-        _id: args.deleteRegisteredDrinkInput.id,
+        _id: args.id,
       })
       return true
     } catch (err) {

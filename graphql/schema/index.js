@@ -55,7 +55,6 @@ type CurrentAttendee {
 type DrinkType {
   _id: ID!
   name: String!
-  createdDrinks: [Drink!]!
 }
 
 type Drink {
@@ -141,6 +140,26 @@ input UpdateAttendeeDrinksInput {
   date: String!
 }
 
+
+type RegisteredDrink {
+  _id: ID!
+  name: String!
+  drinkType: DrinkType!
+}
+
+type AvailableDrink {
+  _id: ID!
+  name: String!
+  drinkId: String!
+  drinkType: DrinkType!
+  consumedDateList: [String!]!
+}
+
+input AddRegisteredDrinkInput {
+  name: String!
+  drinkTypeId: String!
+}
+
 type RootQuery {
     events: [Event!]!
     bookings: [Booking!]!
@@ -151,6 +170,14 @@ type RootQuery {
     drinks: [Drink!]!
     currentDrinks: [CurrentDrink!]!
     dailyDrinksList: [DailyDrinks!]!
+
+    getRegisteredDrinkList: [RegisteredDrink!]!
+    existRegisteredDrink: Boolean!
+    getRegisteredDrink: RegisteredDrink!
+
+    getAvailableDrinkList: [AvailableDrink!]!
+    existAvailableDrink: Boolean!
+    getAvailableDrink: AvailableDrink!
 }
 
 type RootMutation {
@@ -168,6 +195,12 @@ type RootMutation {
     deleteAllCurrentAttendees: Boolean!
     deleteAllCurrentDrinks: Boolean!
     saveAllCurrentDrinks(date: String!): Boolean!
+
+    addRegisteredDrink(addRegisteredDrinkInput: AddRegisteredDrinkInput): RegisteredDrink!
+    deleteRegisteredDrink(id: ID!): Boolean!
+
+    addAvailableDrink(id: ID!): AvailableDrink!
+    deleteAvailableDrink(id: ID!): Boolean!
 }
 
 schema {

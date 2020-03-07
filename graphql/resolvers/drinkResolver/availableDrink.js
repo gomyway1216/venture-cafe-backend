@@ -25,14 +25,14 @@ module.exports = {
   /**
    * Endpoint to add available drink by using existing registeredDrink id
    *
-   * @param {string} id id of registeredDrink.
+   * @param {string} id id of registeredDrink that the available drink is trying to use.
    * @return {AvailableDrink} created AvailableDrink
    */
   addAvailableDrink: async (args, req) => {
     try {
       // check if the passed registered drink exists on the RegisteredDrink table
       const registeredDrink = await RegisteredDrink.findOne({
-        _id: args.addAvailableDrinkInput.id,
+        _id: args.id,
       })
 
       // it is error because the method should not allow user to add drink
@@ -46,10 +46,10 @@ module.exports = {
       // safety search to check whether the adding available drink exists
       // on available drink table
       const foundAvailableDrink = await AvailableDrink.findOne({
-        drinkId: args.addAvailableDrinkInput.id,
+        drinkId: args.id,
       })
       if (foundAvailableDrink) {
-        throw new Error('The adding drink already exists.')
+        throw new Error('The adding available drink already exists.')
       }
 
       const newAvailableDrink = new AvailableDrink({
@@ -59,11 +59,12 @@ module.exports = {
         consumedDateList: [],
       })
 
-      const result = await newAvailableDrink.save()
-
-      // return the created drink
-      return result
-      // return transformDrink(result)
+      // return the created available drink
+      return newAvailableDrink
+        .save()
+        .then(newAvailableDrink =>
+          newAvailableDrink.populate('drinkType').execPopulate()
+        )
     } catch (err) {
       console.log(err)
       throw err
@@ -79,9 +80,7 @@ module.exports = {
    */
   existAvailableDrink: async (args, req) => {
     try {
-      const availableDrinkFound = await findAvailableDrinkHelper(
-        args.existAvailableDrinkInput.id
-      )
+      const availableDrinkFound = await findAvailableDrinkHelper(args.id)
       if (availableDrinkFound) {
         return true
       } else {
@@ -103,7 +102,7 @@ module.exports = {
   getAvailableDrink: async (args, req) => {
     try {
       const availableDrink = await AvailableDrink.findOne({
-        _id: args.getAvailableDrinkInput.id,
+        _id: args.id,
       })
 
       // if available drink is not found, return null explicitly
@@ -126,17 +125,51 @@ module.exports = {
    */
   deleteAvailableDrink: async (args, req) => {
     try {
-      const availableDrinkFound = await findAvailableDrinkHelper(
-        args.deleteAvailableDrinkInput.id
-      )
+      const availableDrinkFound = await findAvailableDrinkHelper(args.id)
       if (!availableDrinkFound) {
         return false
       }
 
       await AvailableDrink.deleteOne({
-        _id: args.deleteAvailableDrinkInput.id,
+        _id: args.id,
       })
       return true
+    } catch (err) {
+      console.log(err)
+      throw err
+    }
+  },
+
+  /**
+   * Endpoint to update availableDrink date list.
+   *
+   * @param {string} id id of the available drink that the count is changing
+   * @return {AvailableDrink} returns availableDrink if successful
+   */
+  updateAvailableDrinkCount: async (args, req) => {
+    try {
+      const availableDrink = await AvailableDrink.findOne({
+        _id: args.updateAvailableDrinkCountInput.id,
+      })
+
+      // safety check
+      if (!availableDrink) {
+        throw new Error("The available drink user chose doesn't exist")
+      }
+
+      // add the date to drink
+      availableDrink.consumedDateList.push(
+        args.updateAvailableDrinkCountInput.date
+      )
+      const result = await availableDrink.save()
+
+      // it also have to need to add user's drink list
+
+      return availableDrink
+        .save()
+        .then(availableDrink =>
+          availableDrink.populate('drinkType').execPopulate()
+        )
     } catch (err) {
       console.log(err)
       throw err
