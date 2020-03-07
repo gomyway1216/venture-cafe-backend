@@ -62,6 +62,12 @@ module.exports = {
     }
   },
 
+  /**
+   * Endpoint to remove registeredDrink.
+   *
+   * @param {String} id id of the removing registered drink
+   * @return {RegisteredDrink} deleted RegisteredDrink
+   */
   deleteRegisteredDrink: async (args, req) => {
     try {
       const deletingRegisteredDrink = await RegisteredDrink.findOne({

@@ -67,4 +67,23 @@ module.exports = {
       throw err
     }
   },
+
+  /**
+   * Endpoint to remove availableDrink.
+   *
+   * @param {String} id id of the removing available drink
+   * @return {AvailableDrink} deleted AvailableDrink
+   */
+  deleteAvailableDrink: async (args, req) => {
+    try {
+      const deletingRegisteredDrink = await RegisteredDrink.findOne({
+        _id: args.deleteRegisteredDrink.id,
+      })
+      await RegisteredDrink.deleteOne({ _id: args.deleteRegisteredDrink.id })
+      return deletingRegisteredDrink
+    } catch (err) {
+      console.log(err)
+      throw err
+    }
+  },
 }
