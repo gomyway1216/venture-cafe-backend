@@ -1,11 +1,12 @@
 const authResolver = require('./auth')
-const attendeeResolver = require('./attendee')
+const attendeeResolver = require('./userResolver/attendee')
 const drinkTypeResolver = require('./drinkType')
 const drinkResolver = require('./drink')
 const currentDrinkResolver = require('./currentDrink')
-const currentAttendee = require('./currentAttendee')
+const currentAttendee = require('./userResolver/currentAttendee')
 const dailyDrinks = require('./dailyDrinks')
-const availableDrink = require('./availableDrink')
+const registeredDrink = require('./drinkResolver/registeredDrink')
+const availableDrink = require('./drinkResolver/availableDrink')
 
 const rootResolver = {
   ...authResolver,
@@ -15,6 +16,7 @@ const rootResolver = {
   ...currentDrinkResolver,
   ...currentAttendee,
   ...dailyDrinks,
+  ...registeredDrink,
   ...availableDrink,
 }
 

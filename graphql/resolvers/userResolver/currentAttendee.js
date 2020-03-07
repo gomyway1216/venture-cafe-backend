@@ -1,7 +1,7 @@
-const CurrentAttendee = require('../../models/currentAttendee')
-const Drink = require('../../models/drink')
-const CurrentDrink = require('../../models/currentDrink')
-const { transformAttendee } = require('./merge')
+const CurrentAttendee = require('../../../models/currentAttendee')
+const Drink = require('../../../models/drink')
+const CurrentDrink = require('../../../models/currentDrink')
+const { transformAttendee } = require('../merge')
 
 module.exports = {
   updateAttendeeDrinks: async (args, req) => {

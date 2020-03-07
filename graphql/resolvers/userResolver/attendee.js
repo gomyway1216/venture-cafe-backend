@@ -1,6 +1,6 @@
-const Attendee = require('../../models/attendee')
-const CurrentAttendee = require('../../models/currentAttendee')
-const { transformAttendee } = require('./merge')
+const Attendee = require('../../../models/attendee')
+const CurrentAttendee = require('../../../models/currentAttendee')
+const { transformAttendee } = require('../merge')
 const moment = require('moment')
 
 module.exports = {
