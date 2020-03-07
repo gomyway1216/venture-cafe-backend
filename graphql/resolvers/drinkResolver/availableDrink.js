@@ -1,6 +1,7 @@
 const AvailableDrink = require('../../../models/drinkSchemas/availableDrink')
 const RegisteredDrink = require('../../../models/drinkSchemas/registeredDrink')
-const { transformDrink } = require('../merge')
+// const { transformDrink } = require('../merge')
+const { findAvailableDrinkHelper } = require('../helper/helper')
 
 module.exports = {
   /**
@@ -8,13 +9,13 @@ module.exports = {
    *
    * @return {Array<AvailableDrink>} all available Drinks
    */
-  availableDrinkList: async () => {
+  getAvailableDrinkList: async () => {
     try {
       const availableDrinkList = await AvailableDrink.find()
-
-      return await availableDrinkList.map(drink => {
-        return transformDrink(drink)
-      })
+      return availableDrinkList
+      // return await availableDrinkList.map(drink => {
+      //   return transformDrink(drink)
+      // })
     } catch (err) {
       console.log(err)
       throw err
@@ -24,7 +25,7 @@ module.exports = {
   /**
    * Endpoint to add available drink by using existing registeredDrink id
    *
-   * @param {String} id id of registeredDrink.
+   * @param {string} id id of registeredDrink.
    * @return {AvailableDrink} created AvailableDrink
    */
   addAvailableDrink: async (args, req) => {
@@ -51,17 +52,65 @@ module.exports = {
         throw new Error('The adding drink already exists.')
       }
 
-      const availableDrink = new AvailableDrink({
+      const newAvailableDrink = new AvailableDrink({
         name: registeredDrink.name,
         drinkId: registeredDrink.id,
         drinkType: registeredDrink.drinkType,
         consumedDateList: [],
       })
 
-      const result = await availableDrink.save()
+      const result = await newAvailableDrink.save()
 
       // return the created drink
-      return transformDrink(result)
+      return result
+      // return transformDrink(result)
+    } catch (err) {
+      console.log(err)
+      throw err
+    }
+  },
+
+  /**
+   * Endpoint to check the existence available drink by id
+   *
+   * @param {string} id id of the searching available drink
+   * @return {boolean} returns true if the searching available drink is found,
+   * otherwise returns false
+   */
+  existAvailableDrink: async (args, req) => {
+    try {
+      const availableDrinkFound = await findAvailableDrinkHelper(
+        args.existAvailableDrinkInput.id
+      )
+      if (availableDrinkFound) {
+        return true
+      } else {
+        return false
+      }
+    } catch (err) {
+      console.log(err)
+      throw err
+    }
+  },
+
+  /**
+   * Endpoint to return available drink with passed id
+   *
+   * @param {string} id id of the searching available drink
+   * @return {AvailableDrink} returns available drink object if found,
+   * otherwise returns null
+   */
+  getAvailableDrink: async (args, req) => {
+    try {
+      const availableDrink = await AvailableDrink.findOne({
+        _id: args.getAvailableDrinkInput.id,
+      })
+
+      // if available drink is not found, return null explicitly
+      if (!availableDrink) {
+        return null
+      }
+      return availableDrink
     } catch (err) {
       console.log(err)
       throw err
@@ -71,16 +120,23 @@ module.exports = {
   /**
    * Endpoint to remove availableDrink.
    *
-   * @param {String} id id of the removing available drink
-   * @return {AvailableDrink} deleted AvailableDrink
+   * @param {string} id id of the removing available drink
+   * @return {boolean} returns true if deletion is successful,
+   * otherwise returns false
    */
   deleteAvailableDrink: async (args, req) => {
     try {
-      const deletingRegisteredDrink = await RegisteredDrink.findOne({
-        _id: args.deleteRegisteredDrink.id,
+      const availableDrinkFound = await findAvailableDrinkHelper(
+        args.deleteAvailableDrinkInput.id
+      )
+      if (!availableDrinkFound) {
+        return false
+      }
+
+      await AvailableDrink.deleteOne({
+        _id: args.deleteAvailableDrinkInput.id,
       })
-      await RegisteredDrink.deleteOne({ _id: args.deleteRegisteredDrink.id })
-      return deletingRegisteredDrink
+      return true
     } catch (err) {
       console.log(err)
       throw err
