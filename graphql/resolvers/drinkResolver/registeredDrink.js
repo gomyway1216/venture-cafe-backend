@@ -11,8 +11,8 @@ module.exports = {
    */
   getRegisteredDrinkList: async () => {
     try {
-      const registeredDrinkList = await RegisteredDrink.find()
-      return registeredDrinkList
+      // const registeredDrinkList = await RegisteredDrink.find()
+      return RegisteredDrink.find()
       // return await registeredDrinkList.map(drink => transformDrink(drink))
     } catch (err) {
       console.log(err)
@@ -64,7 +64,7 @@ module.exports = {
   },
 
   /**
-   * Endpoint to check the existence registered drink by id
+   * Endpoint to check the existence of registered drink by id
    *
    * @param {string} id id of the searching registered drink
    * @return {boolean} returns true if the searching registered drink is found,
@@ -88,7 +88,7 @@ module.exports = {
    * Endpoint to return registered drink with passed id
    *
    * @param {string} id id of the searching registered drink
-   * @return {RegisteredDrink} returns registered drink object if found,
+   * @return {RegisteredDrink|null} returns registered drink object if found,
    * otherwise returns null
    */
   getRegisteredDrink: async (args, req) => {
@@ -97,7 +97,7 @@ module.exports = {
         _id: args.id,
       })
 
-      // if available drink is not found, return null explicitly
+      // if registered drink is not found, return null explicitly
       if (!registeredDrink) {
         return null
       }

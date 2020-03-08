@@ -1,4 +1,4 @@
-const Attendee = require('../../../models/attendee')
+const Attendee = require('../../../models/userSchemas/user')
 const CurrentAttendee = require('../../../models/currentAttendee')
 const { transformAttendee } = require('../merge')
 const moment = require('moment')

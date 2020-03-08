@@ -9,10 +9,9 @@ module.exports = {
    *
    * @return {Array<AvailableDrink>} all available Drinks
    */
-  getAvailableDrinkList: async () => {
+  getAvailableDrinkList: async (args, req) => {
     try {
-      const availableDrinkList = await AvailableDrink.find()
-      return availableDrinkList
+      return AvailableDrink.find()
       // return await availableDrinkList.map(drink => {
       //   return transformDrink(drink)
       // })
@@ -72,7 +71,7 @@ module.exports = {
   },
 
   /**
-   * Endpoint to check the existence available drink by id
+   * Endpoint to check the existence of available drink by id
    *
    * @param {string} id id of the searching available drink
    * @return {boolean} returns true if the searching available drink is found,
@@ -96,7 +95,7 @@ module.exports = {
    * Endpoint to return available drink with passed id
    *
    * @param {string} id id of the searching available drink
-   * @return {AvailableDrink} returns available drink object if found,
+   * @return {AvailableDrink|null} returns available drink object if found,
    * otherwise returns null
    */
   getAvailableDrink: async (args, req) => {

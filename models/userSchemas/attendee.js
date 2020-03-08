@@ -3,6 +3,10 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const attendeeSchema = new Schema({
+  userId: {
+    type: String,
+    required: true,
+  },
   firstName: {
     type: String,
     required: true,
@@ -11,21 +15,10 @@ const attendeeSchema = new Schema({
     type: String,
     required: true,
   },
-  email: {
-    type: String,
-    required: true,
-  },
-  signUpDate: {
-    type: String,
-    required: true,
-  },
-  lastSignInDate: {
-    type: String,
-  },
-  drinks: [
+  drinkList: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'Drink',
+      ref: 'AvailableDrink',
     },
   ],
 })
