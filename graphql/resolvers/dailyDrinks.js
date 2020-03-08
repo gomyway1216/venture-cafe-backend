@@ -15,7 +15,7 @@ module.exports = {
       currentDrinks.map(currentDrink => {
         currentDrink.count.map(drinkDate => {
           drinkAndDate.push({
-            drink: currentDrink.drinkId,
+            drink: currentDrink.drinkID,
             date: drinkDate,
           })
         })

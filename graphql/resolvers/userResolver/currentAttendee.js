@@ -15,7 +15,7 @@ module.exports = {
       console.log('args', args)
       // find the drink
       const drink = await Drink.findOne({
-        _id: args.updateAttendeeDrinksInput.drinkId,
+        _id: args.updateAttendeeDrinksInput.drinkID,
       })
 
       if (!drink) {
@@ -23,7 +23,7 @@ module.exports = {
       }
 
       let currentDrink = await CurrentDrink.findOne({
-        drinkId: args.updateAttendeeDrinksInput.drinkId,
+        drinkID: args.updateAttendeeDrinksInput.drinkID,
       })
 
       // in the beginning, the drink is not in the table, so add the drink to the table

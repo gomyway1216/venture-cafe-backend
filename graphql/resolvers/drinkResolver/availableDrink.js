@@ -45,7 +45,7 @@ module.exports = {
       // safety search to check whether the adding available drink exists
       // on available drink table
       const foundAvailableDrink = await AvailableDrink.findOne({
-        drinkId: args.id,
+        drinkID: args.id,
       })
       if (foundAvailableDrink) {
         throw new Error('The adding available drink already exists.')
@@ -53,7 +53,7 @@ module.exports = {
 
       const newAvailableDrink = new AvailableDrink({
         name: registeredDrink.name,
-        drinkId: registeredDrink.id,
+        drinkID: registeredDrink.id,
         drinkType: registeredDrink.drinkType,
         consumedDateList: [],
       })

@@ -63,17 +63,18 @@ module.exports = {
   },
 
   /**
-   * Endpoint to add registeredDrink.
+   * Endpoint to add event.
    *
-   * @param {string} name name of the registering drink
-   * @param {string} drinkTypeId id of the drink type of the registering drink,
-   * this is passing drinkType id not drinkType, because frontend doesn't know what drinkType is
-   * @return {RegisteredDrink} created RegisteredDrink
+   * @param {string} name name of the adding event
+   * @param {string} drinkTypeID id of the drink type of the registering drink
+   * @param {string} date date of the adding event
+   * @param {string} location location of the drink type of the registering drink,
+   * @return {Event} created RegisteredDrink
    */
   addEvent: async (args, req) => {
     try {
       const eventType = await EventType.findOne({
-        _id: args.addEventInput.eventTypeId,
+        _id: args.addEventInput.eventTypeID,
       })
 
       if (!eventType) {
@@ -83,7 +84,7 @@ module.exports = {
       // safety checking
       const foundEvent = await Event.findOne({
         name: args.addEventInput.name,
-        eventType: args.addEventInput.eventTypeId,
+        eventType: args.addEventInput.eventTypeID,
         date: args.addEventInput.date,
         location: args.addEventInput.location,
       })
@@ -94,7 +95,7 @@ module.exports = {
 
       const newEvent = new Event({
         name: args.addEventInput.name,
-        eventType: args.addEventInput.eventTypeId,
+        eventType: args.addEventInput.eventTypeID,
         date: args.addEventInput.date,
         location: args.addEventInput.location,
         drinkList: [],
@@ -117,7 +118,7 @@ module.exports = {
    * @return {boolean} returns true if deletion is successful,
    * otherwise returns false
    */
-  deleteRegisteredDrink: async (args, req) => {
+  deleteEvent: async (args, req) => {
     try {
       const eventFound = await findEventHelper(args.id)
       if (!eventFound) {

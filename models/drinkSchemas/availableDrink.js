@@ -7,7 +7,7 @@ const availableDrinkSchema = new Schema({
     type: String,
     required: true,
   },
-  drinkId: {
+  drinkID: {
     type: String,
     required: true,
   },

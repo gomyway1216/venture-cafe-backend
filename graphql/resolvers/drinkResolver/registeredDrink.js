@@ -24,14 +24,14 @@ module.exports = {
    * Endpoint to add registeredDrink.
    *
    * @param {string} name name of the registering drink
-   * @param {string} drinkTypeId id of the drink type of the registering drink,
+   * @param {string} drinkTypeID id of the drink type of the registering drink,
    * this is passing drinkType id not drinkType, because frontend doesn't know what drinkType is
    * @return {RegisteredDrink} created RegisteredDrink
    */
   addRegisteredDrink: async (args, req) => {
     try {
       const drinkType = await DrinkType.findOne({
-        _id: args.addRegisteredDrinkInput.drinkTypeId,
+        _id: args.addRegisteredDrinkInput.drinkTypeID,
       })
       //safety checking
       if (!drinkType) {
@@ -48,7 +48,7 @@ module.exports = {
 
       const newRegisteredDrink = new RegisteredDrink({
         name: args.addRegisteredDrinkInput.name,
-        drinkType: args.addRegisteredDrinkInput.drinkTypeId,
+        drinkType: args.addRegisteredDrinkInput.drinkTypeID,
       })
 
       // return the created drink

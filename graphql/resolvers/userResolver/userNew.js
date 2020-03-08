@@ -16,7 +16,7 @@ module.exports = {
    * @param {string} lastName lastName of creating admin user.
    * @param {string} email email of creating admin user.
    * @param {string} password password of creating admin user.
-   * @param {string} signUpDate signUpDate of creating admin user.
+   * @param {string} date date of admin user create.
    * @return {User} created Admin User
    */
   createAdminUser: async args => {
@@ -56,6 +56,7 @@ module.exports = {
    *
    * @param {string} email email of creating admin user.
    * @param {string} password password of creating admin user.
+   * @param {string} date date of admin user log in.
    * @return {Object} id of admin user and related token,
    * and the expiration time for the token
    */
@@ -83,12 +84,15 @@ module.exports = {
       }
 
       const token = jwt.sign(
-        { userId: foundUser.id, email: foundUser.email },
+        { userID: foundUser.id, email: foundUser.email },
         process.env.TOKEN_SECRET_KEY,
         { expiresIn: '1h' }
       )
 
-      return { userId: foundUser.id, token: token, tokenExpiration: 1 }
+      foundUser.lastSignInDate = logInAdminUserInput.date
+      await foundUser.save()
+
+      return { userID: foundUser.id, token: token, tokenExpiration: 1 }
     } catch (err) {
       console.log(err)
       return err
@@ -98,10 +102,11 @@ module.exports = {
   /**
    * Endpoint to create User
    *
-   * @param {string} email email of creating admin user.
-   * @param {string} password password of creating admin user.
-   * @return {Object} id of admin user and related token,
-   * and the expiration time for the token
+   * @param {string} firstName firstName of creating user.
+   * @param {string} lastName lastName of creating user.
+   * @param {string} email email of creating user.
+   * @param {string} date date of creating user.
+   * @return {User} created User
    */
   createUser: async (args, req) => {
     try {

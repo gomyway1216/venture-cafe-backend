@@ -5,6 +5,27 @@ const { findAttendeeHelper } = require('../helper/helper')
 
 module.exports = {
   /**
+   * Endpoint to check the existence of attendee by id
+   *
+   * @param {string} id id of the searching attendee
+   * @return {boolean} returns true if the searching attendee is found,
+   * otherwise returns false
+   */
+  existAttendee: async (args, req) => {
+    try {
+      const attendeeFound = await findAttendeeHelper(args.id)
+      if (attendeeFound) {
+        return true
+      } else {
+        return false
+      }
+    } catch (err) {
+      console.log(err)
+      throw err
+    }
+  },
+
+  /**
    * Endpoint to return Attendee passed id
    *
    * @param {string} id id of the searching attendee
@@ -28,27 +49,6 @@ module.exports = {
   },
 
   /**
-   * Endpoint to check the existence of attendee by id
-   *
-   * @param {string} id id of the searching attendee
-   * @return {boolean} returns true if the searching attendee is found,
-   * otherwise returns false
-   */
-  existAttendee: async (args, req) => {
-    try {
-      const attendeeFound = await findAttendeeHelper(args.id)
-      if (attendeeFound) {
-        return true
-      } else {
-        return false
-      }
-    } catch (err) {
-      console.log(err)
-      throw err
-    }
-  },
-
-  /**
    * Endpoint to return all attendees.
    *
    * @return {Array<Attendee>} returns all available attendees
@@ -63,16 +63,17 @@ module.exports = {
   },
 
   /**
-   * Endpoint to return Attendee passed id
+   * Endpoint to return Attendee checking in
    *
    * @param {string} id id of the checkIn user
+   * @param {string} date date of the check in
    * @return {Attendee} returns the object of the user checked in
    */
   checkInUser: async (args, req) => {
     try {
       //  check if the check in user has signed up
       const foundUser = await User.findOne({
-        _id: args.id,
+        _id: args.checkInUserInput.id,
       })
 
       if (!foundUser) {
@@ -81,15 +82,18 @@ module.exports = {
 
       // check if the user already checked in to the event
       const foundAttendee = await Attendee.findOne({
-        userId: args.id,
+        userID: args.checkInUserInput.id,
       })
 
       if (!foundAttendee) {
         throw new Error('The check in user has already checked in')
       }
 
+      foundUser.lastSignInDate = checkInUserInput.date
+      await foundUser.save()
+
       const attendee = new Attendee({
-        userId: foundUser.id,
+        userID: foundUser.id,
         firstName: foundUser.firstName,
         lastName: foundUser.lastName,
         drinkList: [],
@@ -137,7 +141,7 @@ module.exports = {
    * Endpoint to update the attendee's drinkList
    *
    * @param {string} id id of the attendee
-   * @param {string} drinkId drinkId of the drink that the attendee consumed
+   * @param {string} drinkID drinkID of the drink that the attendee consumed
    * @param {string} date date of the drink consumed
    * @return {Attendee} returns updated Attendee object
    */
@@ -152,7 +156,7 @@ module.exports = {
       }
 
       const foundAvailableDrink = await AvailableDrink.findOne({
-        _id: args.updateAttendeeDrinkListInput.drinkId,
+        _id: args.updateAttendeeDrinkListInput.drinkID,
       })
 
       if (!foundAvailableDrink) {

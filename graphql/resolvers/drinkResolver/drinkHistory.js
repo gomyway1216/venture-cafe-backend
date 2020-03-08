@@ -6,7 +6,7 @@ const DrinkHistory = require('../../../models/drinkSchemas/drinkHistory')
 module.exports = {
   // getDrinkHistoryList: () => {
   //   const result = await DrinkHistory.aggregate(
-  //     [ 
+  //     [
   //       {
   //         "$lookup": {
   //           "from": "RegisteredDrink",
@@ -20,20 +20,19 @@ module.exports = {
 
   addDrinkHistory: () => {
     try {
-
     } catch (err) {
       console.log(err)
       throw err
     }
   },
 
-   /**
+  /**
    * Endpoint to add registeredDrink.
    *
-   * @param {string} eventId eventId of the saving list
+   * @param {string} eventID eventID of the saving list
    * @return {boolean} returns true for success in insertion, otherwise, throw error
    */
-  addDrinkHistoryList: (args, req) => {
+  addDrinkHistoryList: async (args, req) => {
     try {
       // traverse through the available drinks
       // eahc drink has date list
@@ -43,15 +42,17 @@ module.exports = {
         availableDrink.consumedDateList.map(drinkDate => [
           drinkHistoryList.push({
             date: drinkDate,
-            registeredDrink: availableDrink.drinkId,
-            event: args.eventId
-          })
+            registeredDrink: availableDrink.drinkID,
+            event: args.eventID,
+          }),
         ])
       })
 
       DrinkHistory.collection.insert(drinkHistoryList, function(err, docs) {
-        if(err) {
-          throw new Error('Having error inserting documents into DrinkHistory table')
+        if (err) {
+          throw new Error(
+            'Having error inserting documents into DrinkHistory table'
+          )
         } else {
           console.log('Insertion into DrinkHistory table is successful')
         }
@@ -61,5 +62,5 @@ module.exports = {
       console.log(err)
       throw err
     }
-  }
+  },
 }
