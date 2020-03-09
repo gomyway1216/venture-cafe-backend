@@ -36,7 +36,7 @@ module.exports = {
     try {
       const foundAttendee = await Attendee.findOne({
         _id: args.id,
-      })
+      }).populate('drinkList')
 
       if (!foundAttendee) {
         return null
@@ -55,7 +55,7 @@ module.exports = {
    */
   getAttendeeList: async (args, req) => {
     try {
-      return await Attendee.find()
+      return await Attendee.find().populate('drinkList')
     } catch (err) {
       console.log(err)
       throw err
@@ -85,11 +85,11 @@ module.exports = {
         userID: args.checkInUserInput.id,
       })
 
-      if (!foundAttendee) {
+      if (foundAttendee) {
         throw new Error('The check in user has already checked in')
       }
 
-      foundUser.lastSignInDate = checkInUserInput.date
+      foundUser.lastSignInDate = args.checkInUserInput.date
       await foundUser.save()
 
       const attendee = new Attendee({
@@ -141,7 +141,7 @@ module.exports = {
    * Endpoint to update the attendee's drinkList
    *
    * @param {string} id id of the attendee
-   * @param {string} drinkID drinkID of the drink that the attendee consumed
+   * @param {string} availableDrinkID drinkID of the drink that the attendee consumed
    * @param {string} date date of the drink consumed
    * @return {Attendee} returns updated Attendee object
    */
@@ -152,20 +152,21 @@ module.exports = {
       })
 
       if (!foundAttendee) {
-        return null
+        throw new Error('The updating attendee does not exist.')
       }
 
       const foundAvailableDrink = await AvailableDrink.findOne({
-        _id: args.updateAttendeeDrinkListInput.drinkID,
+        _id: args.updateAttendeeDrinkListInput.availableDrinkID,
       })
 
       if (!foundAvailableDrink) {
-        throw new Error('The updating drink of the attendee does not exist')
+        throw new Error('The updating drink of the attendee does not exist.')
       }
 
+      // reflecting the change from the attendee to the available drink count
       foundAttendee.drinkList.push(foundAvailableDrink.id)
-      foundAvailableDrink.consumedDrinkList.push(
-        args.updateAttendeeDrinkList.date
+      foundAvailableDrink.consumedDateList.push(
+        args.updateAttendeeDrinkListInput.date
       )
 
       await foundAvailableDrink.save()
@@ -198,7 +199,7 @@ module.exports = {
       await Attendee.deleteOne({
         _id: args.id,
       })
-      return false
+      return true
     } catch (err) {
       console.log(err)
       throw err

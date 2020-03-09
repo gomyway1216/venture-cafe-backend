@@ -4,22 +4,39 @@ const Event = require('../../../models/eventSchemas/event')
 const DrinkHistory = require('../../../models/drinkSchemas/drinkHistory')
 
 module.exports = {
-  // getDrinkHistoryList: () => {
-  //   const result = await DrinkHistory.aggregate(
-  //     [
-  //       {
-  //         "$lookup": {
-  //           "from": "RegisteredDrink",
-  //           "localField": "id",
-  //           "foreignField"
-  //         }
-  //       }
-  //     ]
-  //   )
-  // }
-
-  addDrinkHistory: () => {
+  /**
+   * Endpoint to add registeredDrink. This method has a bug.
+   *
+   * @return {Array<DrinkHistory>} returns true for success in insertion, otherwise, throw error
+   */
+  getDrinkHistoryList: async (args, req) => {
     try {
+      const result = await DrinkHistory.aggregate([
+        {
+          $lookup: {
+            from: RegisteredDrink.collection.name,
+            localField: 'registeredDrink',
+            foreignField: '_id',
+            as: 'resultRegisteredDrink',
+          },
+        },
+        {
+          $lookup: {
+            from: 'events',
+            localField: 'event',
+            foreignField: '_id',
+            as: 'event',
+          },
+        },
+      ])
+
+      console.log('result', result)
+
+      const resultString = JSON.stringify(result, null, 2)
+      console.log(resultString)
+      // return JSON.parse(resultString)
+
+      return result
     } catch (err) {
       console.log(err)
       throw err

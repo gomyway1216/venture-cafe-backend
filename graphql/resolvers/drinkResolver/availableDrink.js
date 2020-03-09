@@ -116,30 +116,6 @@ module.exports = {
   },
 
   /**
-   * Endpoint to remove availableDrink.
-   *
-   * @param {string} id id of the removing available drink
-   * @return {boolean} returns true if deletion is successful,
-   * otherwise returns false
-   */
-  deleteAvailableDrink: async (args, req) => {
-    try {
-      const availableDrinkFound = await findAvailableDrinkHelper(args.id)
-      if (!availableDrinkFound) {
-        return false
-      }
-
-      await AvailableDrink.deleteOne({
-        _id: args.id,
-      })
-      return true
-    } catch (err) {
-      console.log(err)
-      throw err
-    }
-  },
-
-  /**
    * Endpoint to update availableDrink date list.
    *
    * @param {string} id id of the available drink that the count is changing
@@ -170,6 +146,51 @@ module.exports = {
         .then(availableDrink =>
           availableDrink.populate('drinkType').execPopulate()
         )
+    } catch (err) {
+      console.log(err)
+      throw err
+    }
+  },
+
+  /**
+   * Endpoint to remove availableDrink.
+   *
+   * @param {string} id id of the removing available drink
+   * @return {boolean} returns true if deletion is successful,
+   * otherwise returns false
+   */
+  deleteAvailableDrink: async (args, req) => {
+    try {
+      const availableDrinkFound = await findAvailableDrinkHelper(args.id)
+      if (!availableDrinkFound) {
+        return false
+      }
+
+      await AvailableDrink.deleteOne({
+        _id: args.id,
+      })
+      return true
+    } catch (err) {
+      console.log(err)
+      throw err
+    }
+  },
+
+  /**
+   * Endpoint to remove all availableDrinks.
+   *
+   * @return {boolean} returns true if deletion is successful,
+   * otherwise returns false
+   */
+  deleteAvailableDrinks: async (args, req) => {
+    try {
+      await AvailableDrink.deleteMany({}, function(err, data) {
+        if (err) {
+          throw new Error('Deleting all available drinks has some issues.')
+          return false
+        }
+      })
+      return true
     } catch (err) {
       console.log(err)
       throw err
