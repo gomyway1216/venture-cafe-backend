@@ -13,6 +13,10 @@ module.exports = {
    */
   existAvailableDrink: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const availableDrinkFound = await findAvailableDrinkHelper(args.id)
       if (availableDrinkFound) {
         return true
@@ -34,6 +38,10 @@ module.exports = {
    */
   getAvailableDrink: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const availableDrink = await AvailableDrink.findOne({
         _id: args.id,
       }).populate('drinkType')
@@ -56,6 +64,10 @@ module.exports = {
    */
   getAvailableDrinkList: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       return AvailableDrink.find()
       // return await availableDrinkList.map(drink => {
       //   return transformDrink(drink)
@@ -74,6 +86,10 @@ module.exports = {
    */
   addAvailableDrink: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       // check if the passed registered drink exists on the RegisteredDrink table
       const registeredDrink = await RegisteredDrink.findOne({
         _id: args.id,
@@ -124,6 +140,10 @@ module.exports = {
    */
   updateAvailableDrinkCount: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const availableDrink = await AvailableDrink.findOne({
         _id: args.updateAvailableDrinkCountInput.id,
       })
@@ -161,6 +181,10 @@ module.exports = {
    */
   deleteAvailableDrink: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const availableDrinkFound = await findAvailableDrinkHelper(args.id)
       if (!availableDrinkFound) {
         return false
@@ -184,6 +208,10 @@ module.exports = {
    */
   deleteAvailableDrinks: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       await AvailableDrink.deleteMany({}, function(err, data) {
         if (err) {
           throw new Error('Deleting all available drinks has some issues.')

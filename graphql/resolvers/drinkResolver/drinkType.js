@@ -11,6 +11,10 @@ module.exports = {
    */
   existDrinkType: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const drinkTypeFound = await findDrinkTypeHelper(args.id)
       if (drinkTypeFound) {
         return true
@@ -58,6 +62,10 @@ module.exports = {
    */
   getDrinkTypeList: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       return DrinkType.find()
     } catch (err) {
       console.log(err)
@@ -73,6 +81,10 @@ module.exports = {
    */
   addDrinkType: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       // check if the adding drink type already exists in drink type table
       const foundDrinkType = await DrinkType.findOne({
         name: args.name,
@@ -102,6 +114,10 @@ module.exports = {
    */
   deleteDrinkType: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const drinkTypeFound = await findDrinkTypeHelper(args.id)
       if (!drinkTypeFound) {
         return false

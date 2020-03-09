@@ -21,6 +21,10 @@ module.exports = {
    */
   createAdminUser: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       console.log('hashedhashedPasswordPassword')
       const foundUser = await User.findOne({
         email: args.createAdminUserInput.email,
@@ -66,6 +70,10 @@ module.exports = {
    */
   logInAdminUser: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const foundUser = await User.findOne({
         email: args.logInAdminUserInput.email,
       })
@@ -114,6 +122,10 @@ module.exports = {
    */
   createUser: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const foundUser = await User.findOne({
         email: args.createUserInput.email,
       })
@@ -147,6 +159,10 @@ module.exports = {
    */
   existUser: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const userFound = await findUserHelper(args.id)
       if (userFound) {
         return true
@@ -168,6 +184,10 @@ module.exports = {
    */
   getUser: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const user = await User.findOne({
         _id: args.id,
       })
@@ -192,6 +212,10 @@ module.exports = {
    */
   deleteUser: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const userFound = await findUserHelper(args.id)
 
       if (!userFound) {

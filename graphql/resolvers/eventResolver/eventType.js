@@ -11,6 +11,10 @@ module.exports = {
    */
   existEventType: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const eventTypeFound = await findEventTypeHelper(args.id)
       if (eventTypeFound) {
         return true
@@ -32,6 +36,10 @@ module.exports = {
    */
   getEventType: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const eventType = await EventType.findOne({
         _id: args.id,
       })
@@ -54,6 +62,10 @@ module.exports = {
    */
   getEventTypeList: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       return EventType.find()
     } catch (err) {
       console.log(err)
@@ -69,6 +81,10 @@ module.exports = {
    */
   addEventType: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       // check if the adding drink type already exists in drink type table
       const foundEventType = await EventType.findOne({
         name: args.name,
@@ -98,6 +114,10 @@ module.exports = {
    */
   deleteEventType: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const eventTypeFound = await findEventTypeHelper(args.id)
       if (!eventTypeFound) {
         return false

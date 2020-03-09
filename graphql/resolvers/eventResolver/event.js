@@ -12,6 +12,10 @@ module.exports = {
    */
   existEvent: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const eventFound = await findEventHelper(args.id)
       if (eventFound) {
         return true
@@ -33,6 +37,10 @@ module.exports = {
    */
   getEvent: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const event = await Event.findOne({
         _id: args.id,
       }).populate('eventType')
@@ -53,8 +61,12 @@ module.exports = {
    *
    * @return {Array<Event>} all events
    */
-  getEventList: async () => {
+  getEventList: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       return Event.find().populate('eventType')
     } catch (err) {
       console.log(err)
@@ -73,6 +85,10 @@ module.exports = {
    */
   addEvent: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const eventType = await EventType.findOne({
         _id: args.addEventInput.eventTypeID,
       })
@@ -120,6 +136,10 @@ module.exports = {
    */
   deleteEvent: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const eventFound = await findEventHelper(args.id)
       if (!eventFound) {
         return false

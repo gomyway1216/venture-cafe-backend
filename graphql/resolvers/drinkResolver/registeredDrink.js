@@ -13,6 +13,10 @@ module.exports = {
    */
   existRegisteredDrink: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const registeredDrinkFound = await findRegisteredDrinkHelper(args.id)
       if (registeredDrinkFound) {
         return true
@@ -34,6 +38,10 @@ module.exports = {
    */
   getRegisteredDrink: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const registeredDrink = await RegisteredDrink.findOne({
         _id: args.id,
       }).populate('drinkType')
@@ -54,8 +62,12 @@ module.exports = {
    *
    * @return {Array<RegisteredDrink>} all registered Drinks
    */
-  getRegisteredDrinkList: async () => {
+  getRegisteredDrinkList: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       // const registeredDrinkList = await RegisteredDrink.find()
       return RegisteredDrink.find().populate('drinkType')
       // return await registeredDrinkList.map(drink => transformDrink(drink))
@@ -75,6 +87,10 @@ module.exports = {
    */
   addRegisteredDrink: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const drinkType = await DrinkType.findOne({
         _id: args.addRegisteredDrinkInput.drinkTypeID,
       })
@@ -117,6 +133,10 @@ module.exports = {
    */
   deleteRegisteredDrink: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const registeredDrinkFound = await findRegisteredDrinkHelper(args.id)
       if (!registeredDrinkFound) {
         return false

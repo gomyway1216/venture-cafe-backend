@@ -11,6 +11,10 @@ module.exports = {
    */
   getDrinkHistoryList: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const result = await DrinkHistory.aggregate([
         {
           $lookup: {
@@ -51,6 +55,10 @@ module.exports = {
    */
   addDrinkHistoryList: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       // traverse through the available drinks
       // eahc drink has date list
       const drinkHistoryList = []

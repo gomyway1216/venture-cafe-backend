@@ -13,6 +13,10 @@ module.exports = {
    */
   existAttendee: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const attendeeFound = await findAttendeeHelper(args.id)
       if (attendeeFound) {
         return true
@@ -34,6 +38,10 @@ module.exports = {
    */
   getAttendee: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const foundAttendee = await Attendee.findOne({
         _id: args.id,
       }).populate('drinkList')
@@ -55,6 +63,10 @@ module.exports = {
    */
   getAttendeeList: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       return await Attendee.find().populate('drinkList')
     } catch (err) {
       console.log(err)
@@ -71,6 +83,10 @@ module.exports = {
    */
   checkInUser: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       //  check if the check in user has signed up
       const foundUser = await User.findOne({
         _id: args.checkInUserInput.id,
@@ -114,6 +130,10 @@ module.exports = {
    */
   resetAttendeeDrinkList: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const foundAttendee = await Attendee.findOne({
         _id: args.id,
       })
@@ -147,6 +167,10 @@ module.exports = {
    */
   updateAttendeeDrinkList: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const foundAttendee = await Attendee.findOne({
         _id: args.updateAttendeeDrinkListInput.id,
       })
@@ -190,6 +214,10 @@ module.exports = {
    */
   deleteAttendee: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const attendee = await findAttendeeHelper(args.id)
 
       if (!attendee) {
@@ -214,6 +242,10 @@ module.exports = {
    */
   deleteAttendees: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       await Attendee.deleteMany({}, function(err, data) {
         if (err) {
           throw new Error('Deleting all attendees has some issues.')
