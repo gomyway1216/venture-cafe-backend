@@ -5,6 +5,51 @@ const { findRegisteredDrinkHelper } = require('../helper/helper')
 
 module.exports = {
   /**
+   * Endpoint to check the existence of registered drink by id
+   *
+   * @param {string} id id of the searching registered drink
+   * @return {boolean} returns true if the searching registered drink is found,
+   * otherwise returns false
+   */
+  existRegisteredDrink: async (args, req) => {
+    try {
+      const registeredDrinkFound = await findRegisteredDrinkHelper(args.id)
+      if (registeredDrinkFound) {
+        return true
+      } else {
+        return false
+      }
+    } catch (err) {
+      console.log(err)
+      throw err
+    }
+  },
+
+  /**
+   * Endpoint to return registered drink with passed id
+   *
+   * @param {string} id id of the searching registered drink
+   * @return {RegisteredDrink|null} returns registered drink object if found,
+   * otherwise returns null
+   */
+  getRegisteredDrink: async (args, req) => {
+    try {
+      const registeredDrink = await RegisteredDrink.findOne({
+        _id: args.id,
+      }).populate('drinkType')
+
+      // if registered drink is not found, return null explicitly
+      if (!registeredDrink) {
+        return null
+      }
+      return registeredDrink
+    } catch (err) {
+      console.log(err)
+      throw err
+    }
+  },
+
+  /**
    * Endpoint to return all registered drinks.
    *
    * @return {Array<RegisteredDrink>} all registered Drinks
@@ -12,7 +57,7 @@ module.exports = {
   getRegisteredDrinkList: async () => {
     try {
       // const registeredDrinkList = await RegisteredDrink.find()
-      return RegisteredDrink.find()
+      return RegisteredDrink.find().populate('drinkType')
       // return await registeredDrinkList.map(drink => transformDrink(drink))
     } catch (err) {
       console.log(err)
@@ -57,51 +102,6 @@ module.exports = {
         .then(newRegisteredDrink =>
           newRegisteredDrink.populate('drinkType').execPopulate()
         )
-    } catch (err) {
-      console.log(err)
-      throw err
-    }
-  },
-
-  /**
-   * Endpoint to check the existence of registered drink by id
-   *
-   * @param {string} id id of the searching registered drink
-   * @return {boolean} returns true if the searching registered drink is found,
-   * otherwise returns false
-   */
-  existRegisteredDrink: async (args, req) => {
-    try {
-      const registeredDrinkFound = await findRegisteredDrinkHelper(args.id)
-      if (registeredDrinkFound) {
-        return true
-      } else {
-        return false
-      }
-    } catch (err) {
-      console.log(err)
-      throw err
-    }
-  },
-
-  /**
-   * Endpoint to return registered drink with passed id
-   *
-   * @param {string} id id of the searching registered drink
-   * @return {RegisteredDrink|null} returns registered drink object if found,
-   * otherwise returns null
-   */
-  getRegisteredDrink: async (args, req) => {
-    try {
-      const registeredDrink = await RegisteredDrink.findOne({
-        _id: args.id,
-      })
-
-      // if registered drink is not found, return null explicitly
-      if (!registeredDrink) {
-        return null
-      }
-      return registeredDrink
     } catch (err) {
       console.log(err)
       throw err

@@ -39,6 +39,8 @@ module.exports = {
       if (!eventType) {
         return null
       }
+
+      return eventType
     } catch (err) {
       console.log(err)
       throw err

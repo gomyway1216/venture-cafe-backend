@@ -35,7 +35,7 @@ module.exports = {
     try {
       const event = await Event.findOne({
         _id: args.id,
-      })
+      }).populate('eventType')
 
       // if registered drink is not found, return null explicitly
       if (!event) {
@@ -55,7 +55,7 @@ module.exports = {
    */
   getEventList: async () => {
     try {
-      return Event.find()
+      return Event.find().populate('eventType')
     } catch (err) {
       console.log(err)
       throw err
@@ -66,10 +66,10 @@ module.exports = {
    * Endpoint to add event.
    *
    * @param {string} name name of the adding event
-   * @param {string} drinkTypeID id of the drink type of the registering drink
+   * @param {string} eventTypeID id of the event type of the adding event
    * @param {string} date date of the adding event
-   * @param {string} location location of the drink type of the registering drink,
-   * @return {Event} created RegisteredDrink
+   * @param {string} location location of the event,
+   * @return {Event} created Event
    */
   addEvent: async (args, req) => {
     try {

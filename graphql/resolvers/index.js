@@ -17,7 +17,7 @@ const eventTypeResolver = require('./eventResolver/eventType')
 const eventResolver = require('./eventResolver/event')
 
 // for userResolvers
-const userResolver = require('./userResolver/user')
+const userResolver = require('./userResolver/userNew')
 const attendeeResolver = require('./userResolver/attendeeNew')
 
 const rootResolver = {

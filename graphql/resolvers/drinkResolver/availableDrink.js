@@ -5,6 +5,51 @@ const { findAvailableDrinkHelper } = require('../helper/helper')
 
 module.exports = {
   /**
+   * Endpoint to check the existence of available drink by id
+   *
+   * @param {string} id id of the searching available drink
+   * @return {boolean} returns true if the searching available drink is found,
+   * otherwise returns false
+   */
+  existAvailableDrink: async (args, req) => {
+    try {
+      const availableDrinkFound = await findAvailableDrinkHelper(args.id)
+      if (availableDrinkFound) {
+        return true
+      } else {
+        return false
+      }
+    } catch (err) {
+      console.log(err)
+      throw err
+    }
+  },
+
+  /**
+   * Endpoint to return available drink with passed id
+   *
+   * @param {string} id id of the searching available drink
+   * @return {AvailableDrink|null} returns available drink object if found,
+   * otherwise returns null
+   */
+  getAvailableDrink: async (args, req) => {
+    try {
+      const availableDrink = await AvailableDrink.findOne({
+        _id: args.id,
+      }).populate('drinkType')
+
+      // if available drink is not found, return null explicitly
+      if (!availableDrink) {
+        return null
+      }
+      return availableDrink
+    } catch (err) {
+      console.log(err)
+      throw err
+    }
+  },
+
+  /**
    * Endpoint to return all available drinks.
    *
    * @return {Array<AvailableDrink>} all available Drinks
@@ -71,51 +116,6 @@ module.exports = {
   },
 
   /**
-   * Endpoint to check the existence of available drink by id
-   *
-   * @param {string} id id of the searching available drink
-   * @return {boolean} returns true if the searching available drink is found,
-   * otherwise returns false
-   */
-  existAvailableDrink: async (args, req) => {
-    try {
-      const availableDrinkFound = await findAvailableDrinkHelper(args.id)
-      if (availableDrinkFound) {
-        return true
-      } else {
-        return false
-      }
-    } catch (err) {
-      console.log(err)
-      throw err
-    }
-  },
-
-  /**
-   * Endpoint to return available drink with passed id
-   *
-   * @param {string} id id of the searching available drink
-   * @return {AvailableDrink|null} returns available drink object if found,
-   * otherwise returns null
-   */
-  getAvailableDrink: async (args, req) => {
-    try {
-      const availableDrink = await AvailableDrink.findOne({
-        _id: args.id,
-      })
-
-      // if available drink is not found, return null explicitly
-      if (!availableDrink) {
-        return null
-      }
-      return availableDrink
-    } catch (err) {
-      console.log(err)
-      throw err
-    }
-  },
-
-  /**
    * Endpoint to remove availableDrink.
    *
    * @param {string} id id of the removing available drink
@@ -143,6 +143,7 @@ module.exports = {
    * Endpoint to update availableDrink date list.
    *
    * @param {string} id id of the available drink that the count is changing
+   * @param {string} date date of the available drink is consumed
    * @return {AvailableDrink} returns availableDrink if successful
    */
   updateAvailableDrinkCount: async (args, req) => {

@@ -32,6 +32,10 @@ module.exports = {
    */
   getDrinkType: async (args, req) => {
     try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
       const drinkType = await DrinkType.findOne({
         _id: args.id,
       })
@@ -39,6 +43,8 @@ module.exports = {
       if (!drinkType) {
         return null
       }
+
+      return drinkType
     } catch (err) {
       console.log(err)
       throw err

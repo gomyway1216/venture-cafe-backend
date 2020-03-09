@@ -44,7 +44,7 @@ type User {
   firstName: String!
   lastName: String!
   email: String!
-  password: String!
+  password: String
   signUpDate: String!
   lastSignInDate: String
   isAdmin: Boolean!
@@ -76,7 +76,7 @@ input UpdateAvailableDrinkCountInput {
 
 input AddEventInput {
   name: String!
-  drinkTypeID: ID!
+  eventTypeID: ID!
   date: String!
   location: String!
 }
@@ -86,7 +86,7 @@ input CreateAdminUserInput {
   lastName: String!
   email: String!
   password: String!
-  signUpDate: String!
+  date: String!
 }
 
 input LogInAdminUserInput {
@@ -116,32 +116,32 @@ input UpdateAttendeeDrinkListInput {
 
 type RootQuery {
     existDrinkType(id: ID!): Boolean!
-    getDrinkType(id: ID!): DrinkType!
+    getDrinkType(id: ID!): DrinkType
     getDrinkTypeList: [DrinkType!]!
 
+    existRegisteredDrink(id: ID!): Boolean!
+    getRegisteredDrink(id: ID!): RegisteredDrink
     getRegisteredDrinkList: [RegisteredDrink!]!
-    existRegisteredDrink: Boolean!
-    getRegisteredDrink: RegisteredDrink!
 
+    existAvailableDrink(id: ID!): Boolean!
+    getAvailableDrink(id: ID!): AvailableDrink
     getAvailableDrinkList: [AvailableDrink!]!
-    existAvailableDrink: Boolean!
-    getAvailableDrink: AvailableDrink!
 
 
     existEventType(id: ID!): Boolean!
-    getEventType(id: ID!): EventType!
+    getEventType(id: ID!): EventType
     getEventTypeList: [EventType!]!
 
     existEvent(id: ID!): Boolean!
-    getEvent(id: ID!): Event!
+    getEvent(id: ID!): Event
     getEventList: [Event!]!
 
 
     existUser(id: ID!): Boolean!
-    getUser(id: ID!): User!
+    getUser(id: ID!): User
 
     existAttendee(id: ID!): Boolean!
-    getAttendee(id: ID!): Attendee!
+    getAttendee(id: ID!): Attendee
     getAttendeeList: [Attendee!]!
 }
 

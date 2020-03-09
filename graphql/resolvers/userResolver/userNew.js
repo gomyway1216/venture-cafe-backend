@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const User = require('../../models/userSchemas/user')
+const User = require('../../../models/userSchemas/user')
 const { findUserHelper } = require('../helper/helper')
 
 require('dotenv').config({
@@ -19,8 +19,9 @@ module.exports = {
    * @param {string} date date of admin user create.
    * @return {User} created Admin User
    */
-  createAdminUser: async args => {
+  createAdminUser: async (args, req) => {
     try {
+      console.log('hashedhashedPasswordPassword')
       const foundUser = await User.findOne({
         email: args.createAdminUserInput.email,
       })
@@ -30,20 +31,23 @@ module.exports = {
       }
 
       const hashedPassword = await bcrypt.hash(
-        args.createAdminUserInput.hashedPassword,
+        args.createAdminUserInput.password,
         12
       )
+
+      console.log('hashedPassword', hashedPassword)
 
       const newUser = new User({
         firstName: args.createAdminUserInput.firstName,
         lastName: args.createAdminUserInput.lastName,
         email: args.createAdminUserInput.email,
         password: hashedPassword,
-        signedUpDate: args.createAdminUserInput.date,
+        signUpDate: args.createAdminUserInput.date,
         isAdmin: true,
       })
 
       const result = await newUser.save()
+      console.log('result', result)
       return { ...result._doc, password: null }
     } catch (err) {
       console.log(err)
@@ -60,7 +64,7 @@ module.exports = {
    * @return {Object} id of admin user and related token,
    * and the expiration time for the token
    */
-  logInAdminUser: async args => {
+  logInAdminUser: async (args, req) => {
     try {
       const foundUser = await User.findOne({
         email: args.logInAdminUserInput.email,
@@ -89,7 +93,7 @@ module.exports = {
         { expiresIn: '1h' }
       )
 
-      foundUser.lastSignInDate = logInAdminUserInput.date
+      foundUser.lastSignInDate = args.logInAdminUserInput.date
       await foundUser.save()
 
       return { userID: foundUser.id, token: token, tokenExpiration: 1 }
@@ -122,7 +126,7 @@ module.exports = {
         firstName: args.createUserInput.firstName,
         lastName: args.createUserInput.lastName,
         email: args.createUserInput.email,
-        signedUpDate: args.createUserInput.date,
+        signUpDate: args.createUserInput.date,
         isAdmin: false,
       })
 
@@ -164,7 +168,7 @@ module.exports = {
    */
   getUser: async (args, req) => {
     try {
-      const user = await RegisteredDrink.findOne({
+      const user = await User.findOne({
         _id: args.id,
       })
 
