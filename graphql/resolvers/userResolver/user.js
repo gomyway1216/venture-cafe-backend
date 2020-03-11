@@ -94,13 +94,13 @@ module.exports = {
       const token = jwt.sign(
         { userID: foundUser.id, email: foundUser.email },
         process.env.TOKEN_SECRET_KEY,
-        { expiresIn: '1h' }
+        { expiresIn: '5h' }
       )
 
       foundUser.lastSignInDate = args.logInAdminUserInput.date
       await foundUser.save()
 
-      return { userID: foundUser.id, token: token, tokenExpiration: 1 }
+      return { userID: foundUser.id, token: token, tokenExpiration: 5 }
     } catch (err) {
       console.log(err)
       return err
