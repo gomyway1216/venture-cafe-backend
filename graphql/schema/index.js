@@ -95,6 +95,7 @@ input CreateAdminUserInput {
   email: String!
   password: String!
   date: String!
+  adminCreateKey: String!
 }
 
 input LogInAdminUserInput {

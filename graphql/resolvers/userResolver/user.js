@@ -17,15 +17,18 @@ module.exports = {
    * @param {string} email email of creating admin user.
    * @param {string} password password of creating admin user.
    * @param {string} date date of admin user create.
+   * @param {string} adminCreateKey adminKey to create the admin user
    * @return {User} created Admin User
    */
   createAdminUser: async (args, req) => {
     try {
-      if (!req.isAuth) {
-        throw new Error('Unauthenticated!')
+      if (
+        args.createAdminUserInput.adminCreateKey !==
+        process.env.ADMIN_CREATE_KEY
+      ) {
+        throw new Error('The admin key is wrong!')
       }
 
-      console.log('hashedhashedPasswordPassword')
       const foundUser = await User.findOne({
         email: args.createAdminUserInput.email,
       })
@@ -39,8 +42,6 @@ module.exports = {
         12
       )
 
-      console.log('hashedPassword', hashedPassword)
-
       const newUser = new User({
         firstName: args.createAdminUserInput.firstName,
         lastName: args.createAdminUserInput.lastName,
@@ -51,7 +52,6 @@ module.exports = {
       })
 
       const result = await newUser.save()
-      console.log('result', result)
       return { ...result._doc, password: null }
     } catch (err) {
       console.log(err)
@@ -118,10 +118,6 @@ module.exports = {
    */
   createUser: async (args, req) => {
     try {
-      if (!req.isAuth) {
-        throw new Error('Unauthenticated!')
-      }
-
       const foundUser = await User.findOne({
         email: args.createUserInput.email,
       })

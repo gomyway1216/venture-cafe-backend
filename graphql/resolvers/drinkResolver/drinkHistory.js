@@ -42,12 +42,6 @@ module.exports = {
         },
       ])
 
-      // console.log('result', result)
-
-      // const resultString = JSON.stringify(result, null, 2)
-      // console.log(resultString)
-      // return JSON.parse(resultString)
-
       return result
     } catch (err) {
       console.log(err)
