@@ -70,10 +70,6 @@ module.exports = {
    */
   logInAdminUser: async (args, req) => {
     try {
-      if (!req.isAuth) {
-        throw new Error('Unauthenticated!')
-      }
-
       const foundUser = await User.findOne({
         email: args.logInAdminUserInput.email,
       })

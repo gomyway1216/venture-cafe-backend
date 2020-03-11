@@ -6,9 +6,9 @@ const mongoose = require('mongoose')
 const graphQlSchema = require('./graphql/schema/index')
 const graphQlResolvers = require('./graphql/resolvers/index')
 const isAuth = require('./middleware/is-auth')
-const Drink = require('./models/drink')
-const CurrentAttendee = require('./models/currentAttendee')
-const CurrentDrink = require('./models/currentDrink')
+// const Drink = require('./models/drink')
+// const CurrentAttendee = require('./models/currentAttendee')
+// const CurrentDrink = require('./models/currentDrink')
 const DailyDrinks = require('./models/dailyDrinks')
 const moment = require('moment')
 
@@ -59,31 +59,31 @@ mongoose
     console.log(err)
   })
 
-// this the temporary function to modify mongodb schema
-// this is working!
-function renameFields() {
-  console.log('renameFields is called')
-  // for more details, check the mongoDB documentation
-  // https://docs.mongodb.com/manual/reference/operator/update/
-  Drink.updateMany({}, { $set: { count: [] } }, function(err, data) {
-    if (!err) {
-      console.log('modification is successful')
-    }
-  })
-}
+// // this the temporary function to modify mongodb schema
+// // this is working!
+// function renameFields() {
+//   console.log('renameFields is called')
+//   // for more details, check the mongoDB documentation
+//   // https://docs.mongodb.com/manual/reference/operator/update/
+//   Drink.updateMany({}, { $set: { count: [] } }, function(err, data) {
+//     if (!err) {
+//       console.log('modification is successful')
+//     }
+//   })
+// }
 
-function resetAttendeeDrinks() {
-  CurrentAttendee.updateMany({}, { $set: { drinks: [] } }, function(err, data) {
-    if (!err) {
-      console.log('CurrentAttendee modification is successful')
-    }
-  })
-}
+// function resetAttendeeDrinks() {
+//   CurrentAttendee.updateMany({}, { $set: { drinks: [] } }, function(err, data) {
+//     if (!err) {
+//       console.log('CurrentAttendee modification is successful')
+//     }
+//   })
+// }
 
-function deleteAllCurrentDrinks() {
-  CurrentDrink.deleteMany({}, function(err, data) {
-    if (!err) {
-      console.log('Deleting all currentDrinks is successful.')
-    }
-  })
-}
+// function deleteAllCurrentDrinks() {
+//   CurrentDrink.deleteMany({}, function(err, data) {
+//     if (!err) {
+//       console.log('Deleting all currentDrinks is successful.')
+//     }
+//   })
+// }

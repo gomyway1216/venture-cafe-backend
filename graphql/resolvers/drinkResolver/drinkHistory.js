@@ -2,6 +2,7 @@ const RegisteredDrink = require('../../../models/drinkSchemas/registeredDrink')
 const AvailableDrink = require('../../../models/drinkSchemas/availableDrink')
 const Event = require('../../../models/eventSchemas/event')
 const DrinkHistory = require('../../../models/drinkSchemas/drinkHistory')
+const mongoose = require('mongoose')
 
 module.exports = {
   /**
@@ -18,10 +19,10 @@ module.exports = {
       const result = await DrinkHistory.aggregate([
         {
           $lookup: {
-            from: RegisteredDrink.collection.name,
+            from: 'registereddrinks',
             localField: 'registeredDrink',
             foreignField: '_id',
-            as: 'resultRegisteredDrink',
+            as: 'registeredDrink',
           },
         },
         {
@@ -32,12 +33,19 @@ module.exports = {
             as: 'event',
           },
         },
+        {
+          $project: {
+            date: 1,
+            registeredDrink: { $arrayElemAt: ['$registeredDrink', 0] },
+            event: { $arrayElemAt: ['$event', 0] },
+          },
+        },
       ])
 
-      console.log('result', result)
+      // console.log('result', result)
 
-      const resultString = JSON.stringify(result, null, 2)
-      console.log(resultString)
+      // const resultString = JSON.stringify(result, null, 2)
+      // console.log(resultString)
       // return JSON.parse(resultString)
 
       return result
@@ -61,22 +69,23 @@ module.exports = {
 
       // traverse through the available drinks
       // eahc drink has date list
-      const drinkHistoryList = []
+      let drinkHistoryList = []
       const availableDrinkList = await AvailableDrink.find()
+
       availableDrinkList.map(availableDrink => {
-        availableDrink.consumedDateList.map(drinkDate => [
+        availableDrink.consumedDateList.map(drinkDate => {
           drinkHistoryList.push({
             date: drinkDate,
-            registeredDrink: availableDrink.drinkID,
-            event: args.eventID,
-          }),
-        ])
+            registeredDrink: mongoose.Types.ObjectId(availableDrink.drinkID),
+            event: mongoose.Types.ObjectId(args.eventID),
+          })
+        })
       })
 
       DrinkHistory.collection.insert(drinkHistoryList, function(err, docs) {
         if (err) {
           throw new Error(
-            'Having error inserting documents into DrinkHistory table'
+            `Having error inserting documents into DrinkHistory table ${err}`
           )
         } else {
           console.log('Insertion into DrinkHistory table is successful')
