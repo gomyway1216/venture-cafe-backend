@@ -1,173 +1,191 @@
 const { buildSchema } = require('graphql')
 
 module.exports = buildSchema(`
-type Booking {
+type DrinkType {
   _id: ID!
+  name: String!
+}
+
+type RegisteredDrink {
+  _id: ID!
+  name: String!
+  drinkType: DrinkType!
+}
+
+type AvailableDrink {
+  _id: ID!
+  name: String!
+  drinkID: String!
+  drinkType: DrinkType!
+  consumedDateList: [String!]!
+}
+
+type DrinkHistory {
+  _id: ID!
+  date: String!
+  registeredDrink: RegisteredDrink!
   event: Event!
-  user: User!
-  createdAt: String!
-  updatedAt: String!
+}
+
+type EventType {
+  _id: ID!
+  name: String!
+}
+
+type DrinkAndDate {
+  drink: RegisteredDrink!
+  date: String!
 }
 
 type Event {
   _id: ID!
-  title: String!
-  description: String!
-  price: Float!
-  date: String!
-  creator: User!
+  name: String!
+  eventType: EventType
+  date: String
+  location: String
+  drinkList: [DrinkAndDate!]!
 }
 
 type User {
   _id: ID!
+  firstName: String!
+  lastName: String!
   email: String!
   password: String
-  createdEvents: [Event!]
+  signUpDate: String!
+  lastSignInDate: String
+  isAdmin: Boolean!
 }
 
 type AuthData {
-  userId: ID!
+  userID: ID!
   token: String!
   tokenExpiration: Int!
 }
 
 type Attendee {
   _id: ID!
+  userID: ID!
   firstName: String!
   lastName: String!
-  email: String!
-  signUpDate: String!
-  lastSignInDate: String
-  drinks: [Drink!]!
+  drinkList: [AvailableDrink!]!
 }
 
-type CurrentAttendee {
-  _id: ID!
-  attendeeId: String!
+
+input AddRegisteredDrinkInput {
+  name: String!
+  drinkTypeID: String!
+}
+
+input UpdateAvailableDrinkCountInput {
+  id: ID!
+  date: String!
+}
+
+input AddEventInput {
+  name: String!
+  eventTypeID: ID!
+  date: String!
+  location: String!
+}
+
+input CreateAdminUserInput {
   firstName: String!
   lastName: String!
-  email: String!
-  signUpDate: String!
-  lastSignInDate: String!
-  drinks: [Drink!]!
-}
-
-type DrinkType {
-  _id: ID!
-  name: String!
-  createdDrinks: [Drink!]!
-}
-
-type Drink {
-  _id: ID!
-  name: String!
-  drinkType: DrinkType!
-  count: [String!]!
-}
-
-type CurrentDrink {
-  _id: ID!
-  drinkId: String!
-  name: String!
-  drinkType: DrinkType!
-  count: [String!]!
-}
-
-type ReturnResult {
-  result: String!
-}
-
-type DrinkAndDate {
-  drink: Drink!
-  date: String!
-}
-
-type DailyDrinks {
-  _id: ID!
-  date: String!
-  drinks: [DrinkAndDate!]
-}
- 
-input AddDrinkTypeInput {
-  name: String!
-}
-
-input AddDrinkInput {
-  name: String!
-  drinkTypeId: String!
-}
-
-input DrinkCounterUpdateInput {
-  userId: String!
-  drinkCounter: Int!
-  drinkId: ID!
-  date: String!
-}
-
-input AttendeeInput {
-  userId: String!
-  name: String!
-  drinkCounter: Int!
-  date: String!
-}
-
-input SignUpAttendeeInput {
-  firstName: String!
-  lastName: String!
-  email: String!
-  date: String!
-}
-
-input SignInAttendeeInput {
-  _id: String!
-  date: String!
-}
-
-input EventInput {
-  title: String!
-  description: String!
-  price: Float!
-  date: String!
-}
-
-input UserInput {
   email: String!
   password: String!
-}
-
-input UpdateAttendeeDrinksInput {
-  _id: String!
-  drinkId: String!
   date: String!
 }
 
+input LogInAdminUserInput {
+  email: String!
+  password: String!
+  date: String!
+}
+
+input CreateUserInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+  date: String!
+}
+
+input CheckInUserInput {
+  id: ID!
+  date: String!
+}
+
+input UpdateAttendeeDrinkListInput {
+  id: ID!
+  availableDrinkID: ID!
+  date: String!
+}
+
+
 type RootQuery {
-    events: [Event!]!
-    bookings: [Booking!]!
-    login(email: String!, password: String!): AuthData!
-    attendees: [Attendee!]!
-    currentAttendees: [CurrentAttendee!]!
-    drinkTypes: [DrinkType!]!
-    drinks: [Drink!]!
-    currentDrinks: [CurrentDrink!]!
-    dailyDrinksList: [DailyDrinks!]!
+    existDrinkType(id: ID!): Boolean!
+    getDrinkType(id: ID!): DrinkType
+    getDrinkTypeList: [DrinkType!]!
+
+    existRegisteredDrink(id: ID!): Boolean!
+    getRegisteredDrink(id: ID!): RegisteredDrink
+    getRegisteredDrinkList: [RegisteredDrink!]!
+
+    existAvailableDrink(id: ID!): Boolean!
+    getAvailableDrink(id: ID!): AvailableDrink
+    getAvailableDrinkList: [AvailableDrink!]!
+
+    getDrinkHistoryList: [DrinkHistory!]!
+
+    existEventType(id: ID!): Boolean!
+    getEventType(id: ID!): EventType
+    getEventTypeList: [EventType!]!
+
+    existEvent(id: ID!): Boolean!
+    getEvent(id: ID!): Event
+    getEventList: [Event!]!
+
+
+    existUser(id: ID!): Boolean!
+    getUser(id: ID!): User
+
+    existAttendee(id: ID!): Boolean!
+    getAttendee(id: ID!): Attendee
+    getAttendeeList: [Attendee!]!
 }
 
 type RootMutation {
-    createEvent(eventInput: EventInput): Event
-    createUser(userInput: UserInput): User
-    bookEvent(eventId: ID!): Booking!
-    cancelBooking(bookingId: ID!): Event!
-    updateDrinkCounter(drinkCounterUpdateInput: DrinkCounterUpdateInput): Attendee
-    addDrinkType(addDrinkTypeInput: AddDrinkTypeInput): DrinkType
-    addDrink(addDrinkInput: AddDrinkInput): Drink
-    deleteDrink(id: ID!): Drink
-    signInAttendee(signInAttendeeInput: SignInAttendeeInput): CurrentAttendee
-    signUpAttendee(signUpAttendeeInput: SignUpAttendeeInput): Attendee
-    updateAttendeeDrinks(updateAttendeeDrinksInput: UpdateAttendeeDrinksInput): CurrentAttendee
-    deleteAllCurrentAttendees: Boolean!
-    deleteAllCurrentDrinks: Boolean!
-    saveAllCurrentDrinks(date: String!): Boolean!
+  addDrinkType(name: String!): DrinkType!
+  deleteDrinkType(id: ID!): Boolean!
+
+  addRegisteredDrink(addRegisteredDrinkInput: AddRegisteredDrinkInput): RegisteredDrink!
+  deleteRegisteredDrink(id: ID!): Boolean!
+
+  addAvailableDrink(id: ID!): AvailableDrink!
+  deleteAvailableDrink(id: ID!): Boolean!
+  updateAvailableDrinkCount(updateAvailableDrinkCountInput: UpdateAvailableDrinkCountInput!): AvailableDrink
+  deleteAvailableDrinks: Boolean!
+
+  addDrinkHistoryList(eventID: ID!): Boolean!
+
+
+  addEventType(name: String!): EventType!
+  deleteEventType(id: ID!): Boolean!
+
+  addEvent(addEventInput: AddEventInput): Event!
+  deleteEvent(id: ID!): Boolean!
+
+
+  createAdminUser(createAdminUserInput: CreateAdminUserInput): User!
+  logInAdminUser(logInAdminUserInput: LogInAdminUserInput): AuthData!
+  createUser(createUserInput: CreateUserInput): User!
+  deleteUser(id: ID!): Boolean!
+
+  checkInUser(checkInUserInput: CheckInUserInput): Attendee
+  resetAttendeeDrinkList(id: ID!): Attendee
+  updateAttendeeDrinkList(updateAttendeeDrinkListInput: UpdateAttendeeDrinkListInput): Attendee
+  deleteAttendee(id: ID!): Boolean!
+  deleteAttendees: Boolean
 }
 
 schema {

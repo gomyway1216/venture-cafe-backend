@@ -7,12 +7,6 @@ const drinkTypeSchema = new Schema({
     type: String,
     required: true,
   },
-  createdDrinks: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'Drink',
-    },
-  ],
 })
 
 module.exports = mongoose.model('DrinkType', drinkTypeSchema)

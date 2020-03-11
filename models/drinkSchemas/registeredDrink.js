@@ -1,8 +1,7 @@
 const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
-
-const drinkSchema = new Schema({
+const registeredDrinkSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -11,10 +10,6 @@ const drinkSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'DrinkType',
   },
-  count: {
-    type: [String],
-    required: true,
-  },
 })
 
-module.exports = mongoose.model('Drink', drinkSchema)
+module.exports = mongoose.model('RegisteredDrink', registeredDrinkSchema)

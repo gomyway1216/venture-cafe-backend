@@ -2,12 +2,12 @@ const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
 
-const currentDrinkSchema = new Schema({
+const availableDrinkSchema = new Schema({
   name: {
     type: String,
     required: true,
   },
-  drinkId: {
+  drinkID: {
     type: String,
     required: true,
   },
@@ -15,10 +15,10 @@ const currentDrinkSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'DrinkType',
   },
-  count: {
+  consumedDateList: {
     type: [String],
     required: true,
   },
 })
 
-module.exports = mongoose.model('CurrentDrink', currentDrinkSchema)
+module.exports = mongoose.model('AvailableDrink', availableDrinkSchema)
