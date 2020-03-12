@@ -67,7 +67,7 @@ module.exports = {
         throw new Error('Unauthenticated!')
       }
 
-      return AvailableDrink.find()
+      return AvailableDrink.find().populate('drinkType')
       // return await availableDrinkList.map(drink => {
       //   return transformDrink(drink)
       // })
