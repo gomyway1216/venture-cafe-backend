@@ -160,7 +160,7 @@ type RootQuery {
 
     existAttendee(id: ID!): Boolean!
     getAttendee(id: ID!): Attendee
-    getAttendeeList: [Attendee!]!
+    getAttendeeList(eventID: ID!): [Attendee!]!
 }
 
 type RootMutation {

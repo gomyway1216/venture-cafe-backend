@@ -60,7 +60,7 @@ module.exports = {
 
   /**
    * Endpoint to return all attendees.
-   *
+   * @param {string} eventID id of event
    * @return {Array<Attendee>} returns all available attendees
    */
   getAttendeeList: async (args, req) => {
@@ -70,6 +70,11 @@ module.exports = {
       }
 
       const result = await Attendee.aggregate([
+        {
+          $match: {
+            event: mongoose.Types.ObjectId(args.eventID),
+          },
+        },
         {
           $lookup: {
             from: 'events',
