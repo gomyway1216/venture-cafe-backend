@@ -142,7 +142,7 @@ type RootQuery {
 
     existAvailableDrink(id: ID!): Boolean!
     getAvailableDrink(id: ID!): AvailableDrink
-    getAvailableDrinkList: [AvailableDrink!]!
+    getAvailableDrinkList(eventID: ID!): [AvailableDrink!]!
 
     getDrinkHistoryList: [DrinkHistory!]!
 

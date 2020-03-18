@@ -60,7 +60,7 @@ module.exports = {
 
   /**
    * Endpoint to return all available drinks.
-   *
+   * @param {string} eventID id of event
    * @return {Array<AvailableDrink>} all available Drinks
    */
   getAvailableDrinkList: async (args, req) => {
@@ -70,6 +70,11 @@ module.exports = {
       }
 
       const result = await AvailableDrink.aggregate([
+        {
+          $match: {
+            event: mongoose.Types.ObjectId(args.eventID),
+          },
+        },
         {
           $lookup: {
             from: 'events',
@@ -112,7 +117,7 @@ module.exports = {
    * Endpoint to add available drink by using existing registeredDrink id
    *
    * @param {string} id id of registeredDrink that the available drink is trying to use.
-   * @param {string} eventID id of the event the drink is consumed
+   * @param {string} eventID id of the event the drink is used
    * @return {AvailableDrink} created AvailableDrink
    */
   addAvailableDrink: async (args, req) => {
@@ -138,6 +143,7 @@ module.exports = {
       // on available drink table
       const foundAvailableDrink = await AvailableDrink.findOne({
         drinkID: args.addAvailableDrinkInput.id,
+        event: mongoose.Types.ObjectId(args.addAvailableDrinkInput.eventID),
       })
       if (foundAvailableDrink) {
         throw new Error('The adding available drink already exists.')
