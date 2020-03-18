@@ -15,6 +15,10 @@ const availableDrinkSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'DrinkType',
   },
+  event: {
+    type: Schema.Types.ObjectId,
+    ref: 'Event',
+  },
   consumedDateList: {
     type: [String],
     required: true,

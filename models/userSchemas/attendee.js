@@ -15,6 +15,10 @@ const attendeeSchema = new Schema({
     type: String,
     required: true,
   },
+  event: {
+    type: Schema.Types.ObjectId,
+    ref: 'Event',
+  },
   drinkList: [
     {
       type: Schema.Types.ObjectId,

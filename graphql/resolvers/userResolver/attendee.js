@@ -1,7 +1,9 @@
 const User = require('../../../models/userSchemas/user')
 const Attendee = require('../../../models/userSchemas/attendee')
 const AvailableDrink = require('../../../models/drinkSchemas/availableDrink')
+const Event = require('../../../models/eventSchemas/event')
 const { findAttendeeHelper } = require('../helper/helper')
+const mongoose = require('mongoose')
 
 module.exports = {
   /**
@@ -44,7 +46,7 @@ module.exports = {
 
       const foundAttendee = await Attendee.findOne({
         _id: args.id,
-      }).populate('drinkList')
+      }).populate('event drinkList')
 
       if (!foundAttendee) {
         return null
@@ -67,7 +69,37 @@ module.exports = {
         throw new Error('Unauthenticated!')
       }
 
-      return await Attendee.find().populate('drinkList')
+      const result = await Attendee.aggregate([
+        {
+          $lookup: {
+            from: 'events',
+            localField: 'event',
+            foreignField: '_id',
+            as: 'event',
+          },
+        },
+        // {
+        //   $lookup: {
+        //     from: 'availabledrinks',
+        //     localField: 'drinkList',
+        //     foreignField: '_id',
+        //     as: 'drinkList',
+        //   },
+        // },git
+        {
+          $project: {
+            userID: 1,
+            firstName: 1,
+            lastName: 1,
+            event: { $arrayElemAt: ['$event', 0] },
+            // drinkList: { $arrayElemAt: ['$drinkList', 0] },
+            drinkList: 1,
+          },
+        },
+      ])
+
+      return result
+      // return await Attendee.find().populate('drinkList')
     } catch (err) {
       console.log(err)
       throw err
@@ -79,6 +111,7 @@ module.exports = {
    *
    * @param {string} id id of the checkIn user
    * @param {string} date date of the check in
+   * @param {string} eventID id of the event the attendee is attending
    * @return {Attendee} returns the object of the user checked in
    */
   checkInUser: async (args, req) => {
@@ -105,6 +138,15 @@ module.exports = {
         throw new Error('The check in user has already checked in')
       }
 
+      // check the adding the event that the attendee is attending exits or not
+      const event = await Event.findOne({
+        _id: args.checkInUserInput.eventID,
+      })
+
+      if (!event) {
+        throw new Error('The event the attendee is attending does not exist.')
+      }
+
       foundUser.lastSignInDate = args.checkInUserInput.date
       await foundUser.save()
 
@@ -112,10 +154,13 @@ module.exports = {
         userID: foundUser.id,
         firstName: foundUser.firstName,
         lastName: foundUser.lastName,
+        event: mongoose.Types.ObjectId(args.checkInUserInput.eventID),
         drinkList: [],
       })
 
-      return attendee.save()
+      return attendee
+        .save()
+        .then(newAttendee => newAttendee.populate('event drinkList'))
     } catch (err) {
       console.log(err)
       throw err
@@ -149,7 +194,7 @@ module.exports = {
       return foundAttendee
         .save()
         .then(foundAttendee =>
-          foundAttendee.populate('drinkList').execPopulate()
+          foundAttendee.populate('event drinkList').execPopulate()
         )
     } catch (err) {
       console.log(err)
@@ -197,7 +242,7 @@ module.exports = {
       return foundAttendee
         .save()
         .then(foundAttendee =>
-          foundAttendee.populate('drinkList').execPopulate()
+          foundAttendee.populate('event drinkList').execPopulate()
         )
     } catch (err) {
       console.log(err)

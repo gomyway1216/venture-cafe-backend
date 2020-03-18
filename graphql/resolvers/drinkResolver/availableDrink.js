@@ -1,6 +1,8 @@
 const AvailableDrink = require('../../../models/drinkSchemas/availableDrink')
 const RegisteredDrink = require('../../../models/drinkSchemas/registeredDrink')
+const Event = require('../../../models/eventSchemas/event')
 const { findAvailableDrinkHelper } = require('../helper/helper')
+const mongoose = require('mongoose')
 
 module.exports = {
   /**
@@ -43,7 +45,7 @@ module.exports = {
 
       const availableDrink = await AvailableDrink.findOne({
         _id: args.id,
-      }).populate('drinkType')
+      }).populate('event drinkType')
 
       // if available drink is not found, return null explicitly
       if (!availableDrink) {
@@ -67,7 +69,36 @@ module.exports = {
         throw new Error('Unauthenticated!')
       }
 
-      return AvailableDrink.find().populate('drinkType')
+      const result = await AvailableDrink.aggregate([
+        {
+          $lookup: {
+            from: 'events',
+            localField: 'event',
+            foreignField: '_id',
+            as: 'event',
+          },
+        },
+        {
+          $lookup: {
+            from: 'drinktypes',
+            localField: 'drinkType',
+            foreignField: '_id',
+            as: 'drinkType',
+          },
+        },
+        {
+          $project: {
+            name: 1,
+            drinkID: 1,
+            drinkType: { $arrayElemAt: ['$drinkType', 0] },
+            event: { $arrayElemAt: ['$event', 0] },
+            consumedDateList: 1,
+          },
+        },
+      ])
+
+      return result
+      // return AvailableDrink.find().populate('drinkType')
       // return await availableDrinkList.map(drink => {
       //   return transformDrink(drink)
       // })
@@ -81,6 +112,7 @@ module.exports = {
    * Endpoint to add available drink by using existing registeredDrink id
    *
    * @param {string} id id of registeredDrink that the available drink is trying to use.
+   * @param {string} eventID id of the event the drink is consumed
    * @return {AvailableDrink} created AvailableDrink
    */
   addAvailableDrink: async (args, req) => {
@@ -91,7 +123,7 @@ module.exports = {
 
       // check if the passed registered drink exists on the RegisteredDrink table
       const registeredDrink = await RegisteredDrink.findOne({
-        _id: args.id,
+        _id: args.addAvailableDrinkInput.id,
       })
 
       // it is error because the method should not allow user to add drink
@@ -105,16 +137,26 @@ module.exports = {
       // safety search to check whether the adding available drink exists
       // on available drink table
       const foundAvailableDrink = await AvailableDrink.findOne({
-        drinkID: args.id,
+        drinkID: args.addAvailableDrinkInput.id,
       })
       if (foundAvailableDrink) {
         throw new Error('The adding available drink already exists.')
+      }
+
+      // check the adding the event that the available drink is registered exits or not
+      const event = await Event.findOne({
+        _id: args.addAvailableDrinkInput.eventID,
+      })
+
+      if (!event) {
+        throw new Error('The event the attendee is attending does not exist.')
       }
 
       const newAvailableDrink = new AvailableDrink({
         name: registeredDrink.name,
         drinkID: registeredDrink.id,
         drinkType: registeredDrink.drinkType,
+        event: mongoose.Types.ObjectId(args.addAvailableDrinkInput.eventID),
         consumedDateList: [],
       })
 
@@ -122,7 +164,7 @@ module.exports = {
       return newAvailableDrink
         .save()
         .then(newAvailableDrink =>
-          newAvailableDrink.populate('drinkType').execPopulate()
+          newAvailableDrink.populate('event drinkType').execPopulate()
         )
     } catch (err) {
       console.log(err)
@@ -163,7 +205,7 @@ module.exports = {
       return availableDrink
         .save()
         .then(availableDrink =>
-          availableDrink.populate('drinkType').execPopulate()
+          availableDrink.populate('event drinkType').execPopulate()
         )
     } catch (err) {
       console.log(err)

@@ -17,6 +17,7 @@ type AvailableDrink {
   name: String!
   drinkID: String!
   drinkType: DrinkType!
+  event: Event!
   consumedDateList: [String!]!
 }
 
@@ -68,6 +69,7 @@ type Attendee {
   userID: ID!
   firstName: String!
   lastName: String!
+  event: Event!
   drinkList: [AvailableDrink!]!
 }
 
@@ -75,6 +77,11 @@ type Attendee {
 input AddRegisteredDrinkInput {
   name: String!
   drinkTypeID: String!
+}
+
+input AddAvailableDrinkInput {
+  id: ID!
+  eventID: ID!
 }
 
 input UpdateAvailableDrinkCountInput {
@@ -114,6 +121,7 @@ input CreateUserInput {
 input CheckInUserInput {
   id: ID!
   date: String!
+  eventID: ID!
 }
 
 input UpdateAttendeeDrinkListInput {
@@ -162,7 +170,7 @@ type RootMutation {
   addRegisteredDrink(addRegisteredDrinkInput: AddRegisteredDrinkInput): RegisteredDrink!
   deleteRegisteredDrink(id: ID!): Boolean!
 
-  addAvailableDrink(id: ID!): AvailableDrink!
+  addAvailableDrink(addAvailableDrinkInput: AddAvailableDrinkInput): AvailableDrink!
   deleteAvailableDrink(id: ID!): Boolean!
   updateAvailableDrinkCount(updateAvailableDrinkCountInput: UpdateAvailableDrinkCountInput!): AvailableDrink
   deleteAvailableDrinks: Boolean!
