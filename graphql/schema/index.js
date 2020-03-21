@@ -173,7 +173,7 @@ type RootMutation {
   addAvailableDrink(addAvailableDrinkInput: AddAvailableDrinkInput): AvailableDrink!
   deleteAvailableDrink(id: ID!): Boolean!
   updateAvailableDrinkCount(updateAvailableDrinkCountInput: UpdateAvailableDrinkCountInput!): AvailableDrink
-  deleteAvailableDrinks: Boolean!
+  deleteAvailableDrinks(eventID: ID!): Boolean!
 
   addDrinkHistoryList(eventID: ID!): Boolean!
 
@@ -194,7 +194,7 @@ type RootMutation {
   resetAttendeeDrinkList(id: ID!): Attendee
   updateAttendeeDrinkList(updateAttendeeDrinkListInput: UpdateAttendeeDrinkListInput): Attendee
   deleteAttendee(id: ID!): Boolean!
-  deleteAttendees: Boolean
+  deleteAttendees(eventID: ID!): Boolean
 }
 
 schema {

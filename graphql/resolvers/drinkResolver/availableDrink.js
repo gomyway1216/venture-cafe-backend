@@ -259,12 +259,15 @@ module.exports = {
         throw new Error('Unauthenticated!')
       }
 
-      await AvailableDrink.deleteMany({}, function(err, data) {
-        if (err) {
-          throw new Error('Deleting all available drinks has some issues.')
-          return false
+      await AvailableDrink.deleteMany(
+        { event: mongoose.Types.ObjectId(args.eventID) },
+        function(err, data) {
+          if (err) {
+            throw new Error('Deleting all available drinks has some issues.')
+            return false
+          }
         }
-      })
+      )
       return true
     } catch (err) {
       console.log(err)
