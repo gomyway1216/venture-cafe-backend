@@ -134,15 +134,6 @@ module.exports = {
         throw new Error('The check in attendee has not signed up yet.')
       }
 
-      // check if the user already checked in to the event
-      const foundAttendee = await Attendee.findOne({
-        userID: args.checkInUserInput.id,
-      })
-
-      if (foundAttendee) {
-        throw new Error('The check in user has already checked in')
-      }
-
       // check the adding the event that the attendee is attending exits or not
       const event = await Event.findOne({
         _id: args.checkInUserInput.eventID,
@@ -150,6 +141,16 @@ module.exports = {
 
       if (!event) {
         throw new Error('The event the attendee is attending does not exist.')
+      }
+
+      // check if the user already checked in to the event
+      const foundAttendee = await Attendee.findOne({
+        userID: args.checkInUserInput.id,
+        event: mongoose.Types.ObjectId(args.checkInUserInput.eventID),
+      })
+
+      if (foundAttendee) {
+        throw new Error('The check in user has already checked in')
       }
 
       foundUser.lastSignInDate = args.checkInUserInput.date
@@ -296,12 +297,14 @@ module.exports = {
         throw new Error('Unauthenticated!')
       }
 
-      await Attendee.deleteMany({}, function(err, data) {
-        if (err) {
-          throw new Error('Deleting all attendees has some issues.')
-          return false
+      await Attendee.deleteMany(
+        { event: mongoose.Types.ObjectId(args.eventID) },
+        function(err, data) {
+          if (err) {
+            throw new Error('Deleting all attendees has some issues.')
+          }
         }
-      })
+      )
       return true
     } catch (err) {
       console.log(err)
