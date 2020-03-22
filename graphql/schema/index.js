@@ -89,6 +89,16 @@ input UpdateAvailableDrinkCountInput {
   date: String!
 }
 
+input CompositeDrink {
+  drinkID: ID!
+  included: Boolean!
+}
+
+input UpdateAvailableDrinkListInput {
+  compositeDrinkList: [CompositeDrink!]!
+  eventID: ID!
+}
+
 input AddEventInput {
   name: String!
   eventTypeID: ID!
@@ -174,6 +184,7 @@ type RootMutation {
   deleteAvailableDrink(id: ID!): Boolean!
   updateAvailableDrinkCount(updateAvailableDrinkCountInput: UpdateAvailableDrinkCountInput!): AvailableDrink
   deleteAvailableDrinks(eventID: ID!): Boolean!
+  updateAvailableDrinkList(updateAvailableDrinkListInput: UpdateAvailableDrinkListInput!): Boolean!
 
   addDrinkHistoryList(eventID: ID!): Boolean!
 

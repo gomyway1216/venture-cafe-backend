@@ -1,7 +1,7 @@
 const AvailableDrink = require('../../../models/drinkSchemas/availableDrink')
 const RegisteredDrink = require('../../../models/drinkSchemas/registeredDrink')
 const Event = require('../../../models/eventSchemas/event')
-const { findAvailableDrinkHelper } = require('../helper/helper')
+const { findAvailableDrinkHelper, asyncForEach } = require('../helper/helper')
 const mongoose = require('mongoose')
 
 module.exports = {
@@ -213,6 +213,102 @@ module.exports = {
         .then(availableDrink =>
           availableDrink.populate('event drinkType').execPopulate()
         )
+    } catch (err) {
+      console.log(err)
+      throw err
+    }
+  },
+
+  updateAvailableDrinkList: async (args, req) => {
+    try {
+      if (!req.isAuth) {
+        throw new Error('Unauthenticated!')
+      }
+
+      // console.log(
+      //   'updateAvailableDrinkList is called',
+      //   args.updateAvailableDrinkListInput.compositeDrinkList
+      // )
+
+      await asyncForEach(
+        args.updateAvailableDrinkListInput.compositeDrinkList,
+        async compositeDrink => {
+          // console.log('compositeDrink', compositeDrink)
+          // check if the passed registered drink exists on the RegisteredDrink table
+          const registeredDrink = await RegisteredDrink.findOne({
+            _id: compositeDrink.drinkID,
+          })
+
+          // it is error because the method should not allow user to add drink
+          // which doesn't exist in the registered drink table
+          if (!registeredDrink) {
+            throw new Error(
+              'Passed id does not exist in the registered drink table.'
+            )
+          }
+
+          const availableDrink = await AvailableDrink.findOne({
+            drinkID: compositeDrink.drinkID,
+            eventID: args.updateAvailableDrinkListInput.eventID,
+          })
+
+          if (compositeDrink.included && !availableDrink) {
+            const newAvailableDrink = new AvailableDrink({
+              name: registeredDrink.name,
+              drinkID: registeredDrink.id,
+              drinkType: registeredDrink.drinkType,
+              event: mongoose.Types.ObjectId(
+                args.updateAvailableDrinkListInput.eventID
+              ),
+              consumedDateList: [],
+            })
+            await newAvailableDrink.save()
+          } else if (!compositeDrink.included && availableDrink) {
+            await AvailableDrink.deleteOne({
+              drinkID: compositeDrink.drinkID,
+              eventID: args.updateAvailableDrinkListInput.eventID,
+            })
+          }
+        }
+      )
+
+      // req.compositeDrinkList.forEach(compositeDrink => {
+      //   // check if the passed registered drink exists on the RegisteredDrink table
+      //   const registeredDrink = await RegisteredDrink.findOne({
+      //     _id: updateAvailableDrinkListInput.compositeDrink.id,
+      //   })
+
+      //   // it is error because the method should not allow user to add drink
+      //   // which doesn't exist in the registered drink table
+      //   if (!registeredDrink) {
+      //     throw new Error(
+      //       'Passed id does not exist in the registered drink table.'
+      //     )
+      //   }
+
+      //   const availableDrink = await AvailableDrink.findOne({
+      //     drinkID: updateAvailableDrinkListInput.compositeDrink.id,
+      //     eventID: updateAvailableDrinkListInput.eventID
+      //   })
+
+      //   if(compositeDrink.included && !availableDrink) {
+      //     const newAvailableDrink = new AvailableDrink({
+      //       name: registeredDrink.name,
+      //       drinkID: registeredDrink.id,
+      //       drinkType: registeredDrink.drinkType,
+      //       event: mongoose.Types.ObjectId(args.updateAvailableDrinkListInput.eventID),
+      //       consumedDateList: [],
+      //     })
+      //     await newAvailableDrink.save()
+      //   } else if (!compositeDrink.included && availableDrink) {
+      //     await AvailableDrink.deleteOne({
+      //       drinkID: updateAvailableDrinkListInput.compositeDrink.id,
+      //     eventID: updateAvailableDrinkListInput.eventID
+      //     })
+      //   }
+      // });
+      console.log('done')
+      return true
     } catch (err) {
       console.log(err)
       throw err
