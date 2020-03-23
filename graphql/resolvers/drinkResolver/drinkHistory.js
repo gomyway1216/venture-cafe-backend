@@ -64,7 +64,9 @@ module.exports = {
       // traverse through the available drinks
       // eahc drink has date list
       let drinkHistoryList = []
-      const availableDrinkList = await AvailableDrink.find()
+      const availableDrinkList = await AvailableDrink.find({
+        event: args.eventID,
+      })
 
       availableDrinkList.map(availableDrink => {
         availableDrink.consumedDateList.map(drinkDate => {
