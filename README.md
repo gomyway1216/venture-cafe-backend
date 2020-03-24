@@ -26,7 +26,11 @@ After selecting an event, it redirects to the dashboard where the attendee list 
 
 The admin would scan the QR code that the user has on their phone. If it is the first time, the user would be checked into the Attendee list. If not, it would just find from the table. 
 
-![VCT_bar_Screenshot](https://user-images.githubusercontent.com/32227575/75651666-ae398180-5c1e-11ea-8479-e8ca9cb93120.png)
+<img width="2560" alt="Screen Shot 2020-03-24 at 2 19 28 PM" src="https://user-images.githubusercontent.com/32227575/77468011-f5103680-6dda-11ea-9f89-301667ed42c7.png">
+
+The Admin can select/modify the drink for the event. Admin is also able to edit the drink dictionary and types.
+
+<img width="2560" alt="Screen Shot 2020-03-24 at 2 18 03 PM" src="https://user-images.githubusercontent.com/32227575/77468093-1b35d680-6ddb-11ea-8ca4-3178eb1b66d3.png">
 
 ## Getting Started
 To run this project, ccess keys to MongoDB is required. Currently the keys are hidden because it is using confidential data.
